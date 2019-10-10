@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wps:GetStatus
+	xmlns:wps="http://www.opengis.net/wps/2.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.opengis.net/wps/2.0 ../wps.xsd"
+	
+	service="WPS"
+	version="2.0.0">
+	
+	<wps:JobID>913fd481-e18b-4192-9e6b-8d31f7697fa5</wps:JobID>
+	
+</wps:GetStatus>

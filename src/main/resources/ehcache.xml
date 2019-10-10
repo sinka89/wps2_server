@@ -1,0 +1,28 @@
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="ehcache.xsd" updateCheck="true" monitoring="autodetect" dynamicConfig="true">
+    <!--
+
+        DiskStore configuration
+        =======================
+
+    -->
+    <diskStore path="java.io.tmpdir"/>
+
+    <transactionManagerLookup class="net.sf.ehcache.transaction.manager.DefaultTransactionManagerLookup" properties="jndiName=java:/TransactionManager" propertySeparator=";"/>
+    <cacheManagerEventListenerFactory class="" properties=""/>
+
+    <!--
+        Job Process Cache declaration
+    -->
+    <cache name="jobProcessCache"
+           maxEntriesLocalHeap="1000"
+           maxEntriesLocalDisk="1000000"
+           eternal="false"
+           diskSpoolBufferSizeMB="20"
+           timeToLiveSeconds="43200"
+           memoryStoreEvictionPolicy="LFU"
+           copyOnRead="false"
+           copyOnWrite="false"
+           transactionalMode="off">
+        <persistence strategy="localTempSwap"/>
+    </cache>
+</ehcache>
