@@ -9,6 +9,7 @@ import ro.uti.ksme.wps.wps2_server.pojo.wps._2.ProcessDescriptionType;
 import ro.uti.ksme.wps.wps2_server.pojo.wps._2.ProcessOffering;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.parser.ParseController;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessExecutionHelper;
+import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessImplementation;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.WpsProcessReflectionUtil;
 
 import javax.ejb.*;
@@ -47,7 +48,7 @@ public class ProcessManager {
             ProcessorListInstance.INSTANCE.processes.add(pi);
 
         } else {
-            LOGGER.error("Unable to parse the process for in init for class: " + cls.getSimpleName());
+            LOGGER.error("Unable to parse the process for init for class: " + cls.getSimpleName());
         }
     }
 
@@ -93,12 +94,29 @@ public class ProcessManager {
         ProcessDescriptionType process = processIdentifier.getProcessDescriptionType();
         Class<?> clazz = WpsProcessReflectionUtil.getProcessClassBasedOnIdentifier(process.getIdentifier().getValue());
         progressVisitor.endStep();
-        Object processObj = ProcessExecutionHelper.createProcessAndExecute(process, clazz, dataMap);
+        Object processObj = ProcessExecutionHelper.createProcess(process, clazz, dataMap);
+        ProcessCloserMap.INSTANCE.closureMap.put(id, processObj);
+        ProcessExecutionHelper.executeAndGetResult(process, processObj, dataMap);
+
         progressVisitor.endStep();
-        //todo: treat to call method here and add closure for dismiss process
     }
 
     public void cancelProcess(UUID id) {
-        //todo: after adding closure -> cancel process more operations?
+        if (ProcessCloserMap.INSTANCE.closureMap.containsKey(id)) {
+            ProcessImplementation o = (ProcessImplementation) ProcessCloserMap.INSTANCE.closureMap.get(id);
+            try {
+                Class<?>[] interfaces = o.getClass().getInterfaces();
+                for (Class<?> i : interfaces) {
+                    if (i.isAssignableFrom(ProcessImplementation.class)) {
+                        i.getMethod("closeAdditionalResources").invoke(o);
+                    }
+                }
+            } catch (Exception e) {
+                LOGGER.error(e.getMessage(), e);
+            } finally {
+                ProcessCloserMap.INSTANCE.closureMap.remove(id);
+            }
+
+        }
     }
 }

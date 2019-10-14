@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<wps:GetResult 
-	xmlns:wps="http://www.opengis.net/wps/2.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.opengis.net/wps/2.0 ../wps.xsd"
-	
-	service="WPS"
-	version="2.0.0">
-	
-	<wps:JobID>76fa9f0a-5ebf-4ecf-ad29-251318c1231b</wps:JobID>
-	
+<wps:GetResult
+        xmlns:wps="http://www.opengis.net/wps/2.0"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.opengis.net/wps/2.0 ../wps.xsd"
+
+        service="WPS"
+        version="2.0.0">
+
+    <wps:JobID>d0259054-3937-4455-b8c6-19dd981ba59e</wps:JobID>
+
 </wps:GetResult>

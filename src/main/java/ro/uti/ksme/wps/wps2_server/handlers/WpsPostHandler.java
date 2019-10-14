@@ -14,9 +14,8 @@ import java.util.Optional;
 
 /**
  * @author Bogdan-Adrian Sincu
- *
+ * <p>
  * Class implementation for handling Http requests
- *
  */
 public class WpsPostHandler implements HttpHandler {
 
@@ -50,15 +49,22 @@ public class WpsPostHandler implements HttpHandler {
                     os.write(msg.getBytes());
                 }
             } else {
+                InputStream is = null;
                 try {
                     Object output = wps2Sever.callOperation(httpExchange.getRequestBody());
                     if (output instanceof StringWriter) {
                         String s = output.toString();
                         httpExchange.getResponseHeaders().add("Content-Type", "application/xml");
                         httpExchange.sendResponseHeaders(200, s.length());
-                        os.write(s.getBytes());
+                        is = new ByteArrayInputStream(s.getBytes());
+                        byte[] buf = new byte[1024];
+                        int length = is.read(buf);
+                        while (length != -1) {
+                            os.write(buf, 0, length);
+                            length = is.read(buf);
+                        }
                     } else if (output instanceof byte[]) {
-                        InputStream is = new ByteArrayInputStream((byte[]) output);
+                        is = new ByteArrayInputStream((byte[]) output);
                         int available = is.available();
                         if (available != 0) {
                             httpExchange.getResponseHeaders().add("Content-Type", "application/octet-stream");
@@ -78,6 +84,10 @@ public class WpsPostHandler implements HttpHandler {
                         httpExchange.getResponseHeaders().add("Content-Type", "application/xml");
                         httpExchange.sendResponseHeaders(500, s.get().length());
                         os.write(s.get().getBytes());
+                    }
+                } finally {
+                    if (is != null) {
+                        is.close();
                     }
                 }
             }

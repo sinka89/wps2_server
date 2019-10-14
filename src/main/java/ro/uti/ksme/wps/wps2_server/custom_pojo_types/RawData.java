@@ -4,6 +4,7 @@ import ro.uti.ksme.wps.wps2_server.pojo.wps._2.ComplexDataType;
 import ro.uti.ksme.wps.wps2_server.pojo.wps._2.Format;
 
 import javax.xml.bind.annotation.*;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -13,8 +14,9 @@ import java.util.List;
  * Folder implementation is not done
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "RawData", propOrder = {"isFile", "isDirectory", "fileTypes"})
-public class RawData extends ComplexDataType {
+@XmlType(name = "RawData", propOrder = {"isFile", "isDirectory", "fileTypes", "base64ConvertedData"})
+@XmlRootElement(name = "RawData")
+public class RawData extends ComplexDataType implements Serializable {
 
     /* True if the RawData can be a file */
     @XmlAttribute(name = "isFile")
@@ -28,12 +30,23 @@ public class RawData extends ComplexDataType {
     @XmlElement(name = "fileTypes")
     private String[] fileTypes;
 
+    @XmlElement(name = "base64ConvertedData")
+    private byte[] base64ConvertedData;
+
     public RawData(List<Format> formatList) {
         this.format = formatList;
     }
 
     protected RawData() {
         super();
+    }
+
+    public byte[] getBase64ConvertedData() {
+        return base64ConvertedData;
+    }
+
+    public void setBase64ConvertedData(byte[] base64ConvertedData) {
+        this.base64ConvertedData = base64ConvertedData;
     }
 
     public boolean isFile() {

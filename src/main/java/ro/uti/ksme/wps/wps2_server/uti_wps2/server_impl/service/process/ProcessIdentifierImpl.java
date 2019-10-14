@@ -5,6 +5,10 @@ import ro.uti.ksme.wps.wps2_server.pojo.wps._2.ProcessOffering;
 
 import java.util.Map;
 
+/**
+ * @author Bogdan-Adrian Sincu
+ * Class for wrapping over decladerd processes... it instantiates and creates itself after Container init...
+ */
 public class ProcessIdentifierImpl implements ProcessIdentifier {
     private ProcessOffering processOffering;
     private Map<String, Object> properties;

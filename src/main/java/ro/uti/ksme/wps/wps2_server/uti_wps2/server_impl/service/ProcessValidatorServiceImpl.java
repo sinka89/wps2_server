@@ -24,16 +24,24 @@ public class ProcessValidatorServiceImpl implements ProcessValidatorService {
     public void validateInputForExecutionProcess(ProcessIdentifier processIdentifier, List<DataInputType> input) throws ProcessInputValidationException {
         List<InputDescriptionType> processInputs = processIdentifier.getProcessDescriptionType().getInput();
         List<DataInputType> inputDataFound = new ArrayList<>();
+        List<Integer> allreadyChecked = new ArrayList<>();
         boolean dataFound = false;
         for (InputDescriptionType pI : processInputs) {
-            for (DataInputType pD : input) {
-                if (pD.getData() != null && pD.getReference() != null) {
-                    throw new ProcessInputValidationException("Data & Reference simultaneous presents not supported for input: " + pD.getId());
+            for (int i = 0; i < input.size(); i++) {
+                if (!allreadyChecked.isEmpty() && allreadyChecked.contains(i)) {
+                    continue;
                 }
-                if (pI.getIdentifier().getValue().equalsIgnoreCase(pD.getId())) {
-                    inputDataFound.add(pD);
+                if (input.get(i).getData() != null && input.get(i).getReference() != null) {
+                    throw new ProcessInputValidationException("Data & Reference simultaneous presents not supported for input: " + input.get(i).getId());
+                }
+                if (pI.getIdentifier().getValue().equalsIgnoreCase(input.get(i).getId())) {
+                    inputDataFound.add(input.get(i));
                     dataFound = true;
+                    allreadyChecked.add(i);
                 }
+            }
+            if (inputDataFound.size() > Integer.valueOf(pI.getMaxOccurs())) {
+                throw new ProcessInputValidationException("The required Input " + pI.getIdentifier().getValue() + " has too many occurs. Maximum allowed value is " + pI.getMaxOccurs());
             }
             if (pI.getMinOccurs().equals(BigInteger.ONE)) {
                 if (!dataFound) {

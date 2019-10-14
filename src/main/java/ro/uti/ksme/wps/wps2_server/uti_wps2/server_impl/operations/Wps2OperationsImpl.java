@@ -3,6 +3,7 @@ package ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.operations;
 import net.sf.ehcache.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ro.uti.ksme.wps.wps2_server.custom_pojo_types.RawData;
 import ro.uti.ksme.wps.wps2_server.pojo.ows._2.*;
 import ro.uti.ksme.wps.wps2_server.pojo.wps._2.*;
 import ro.uti.ksme.wps.wps2_server.pojo.wps._2.GetCapabilitiesType;
@@ -15,6 +16,7 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.Wps2ServerProps;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.Wps2ServerUtils;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.CacheManagerWpsImpl;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.JobControlOps;
+import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessExecutionHelper;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ResponseType;
 
 import javax.ejb.ConcurrencyManagement;
@@ -27,6 +29,9 @@ import java.io.Serializable;
 import java.net.URI;
 import java.util.*;
 
+/**
+ * @author Bogdan-Adrian Sincu
+ */
 @Startup
 @Singleton
 @ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
@@ -121,55 +126,8 @@ public class Wps2OperationsImpl implements Wps2Operations {
             secReq.add(SectionType.All);
         }
 
-        //TODO: use requested lang for process identif
-        //language check if not accepted throw ExceptionType with the error
-        String requestedLanguage = wps2ServerProps.SERVER_GLOBAL_PROPERTIES.DEFAULT_LANGUAGE;
-        if (getCapabilities.getAcceptLanguages() != null && getCapabilities.getAcceptLanguages().getLanguage() != null &&
-                !getCapabilities.getAcceptLanguages().getLanguage().isEmpty()) {
-            List<String> requestedLanguages = getCapabilities.getAcceptLanguages().getLanguage();
-            boolean isAnyLang = requestedLanguages.contains("*");
-            boolean langFound = false;
-            //try to find the first lang requested by the client which is supported by the server
-            for (String lang : requestedLanguages) {
-                for (String l : wps2ServerProps.SERVER_GLOBAL_PROPERTIES.SUPPORTED_LANGUAGES) {
-                    if (l.equals(lang)) {
-                        requestedLanguage = lang;
-                        langFound = true;
-                        break;
-                    }
-                }
-            }
+        //TODO: use requested lang for process identifier
 
-            //if no lang found try to get one
-            if (!langFound) {
-                for (String lang : requestedLanguages) {
-                    if (!lang.equals("*")) {
-                        String baseLang = lang.substring(0, 2);
-                        for (String serverLang : wps2ServerProps.SERVER_GLOBAL_PROPERTIES.SUPPORTED_LANGUAGES) {
-                            if (serverLang.substring(0, 2).equals(baseLang)) {
-                                requestedLanguage = lang;
-                                langFound = true;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            //if no lang found try to use any lang if allowed
-            if (!langFound && isAnyLang) {
-                requestedLanguage = wps2ServerProps.SERVER_GLOBAL_PROPERTIES.DEFAULT_LANGUAGE;
-                langFound = true;
-            }
-            //if no compatible lang found and any lang not accepted
-            if (!langFound) {
-                ExceptionType exceptionType = new ExceptionType();
-                exceptionType.setExceptionCode("InvalidParameterValue");
-                exceptionType.setLocator("AcceptLanguages");
-                exceptionType.getExceptionText().add("Language not supported by server use '*' wildcard or specify valid language");
-                exceptionReport.getException().add(exceptionType);
-                return exceptionReport;
-            }
-        }
 
         //build the WPS Capabilities response
         WPSCapabilitiesType capType = new WPSCapabilitiesType();
@@ -222,7 +180,7 @@ public class Wps2OperationsImpl implements Wps2Operations {
             List<ProcessIdentifier> processIdList = processManager.getAllProcessIdentifier();
             for (ProcessIdentifier pId : processIdList) {
                 ProcessDescriptionType process = pId.getProcessDescriptionType();
-                //todo: ??? translate process to more readable form ?
+                //todo: ??? translate process to more readable form / language?
                 ProcessSummaryType processSummaryType = new ProcessSummaryType();
                 processSummaryType.getJobControlOptions().addAll(Arrays.asList(wps2ServerProps.SERVER_GLOBAL_PROPERTIES.PROCESS_CONTROL_OPTIONS));
                 processSummaryType.setIdentifier(process.getIdentifier());
@@ -285,6 +243,7 @@ public class Wps2OperationsImpl implements Wps2Operations {
     public Object execute(ExecuteRequestType execute) {
         ProcessIdentifier processIdentifier = processManager.getProcessIdentifier(execute.getIdentifier());
         processValidatorService.validateInputForExecutionProcess(processIdentifier, execute.getInput());
+        Object toReturn = null;
         Map<URI, Object> dataMap = new HashMap<>();
         for (DataInputType input : execute.getInput()) {
             URI id = URI.create(input.getId());
@@ -301,23 +260,20 @@ public class Wps2OperationsImpl implements Wps2Operations {
 
         UUID jobId = UUID.randomUUID();
 
-
         if (execute.getMode() != null && processIdentifier.getProcessOffering().getJobControlOptions().contains(JobControlOps.getEnumByJobMode(execute.getMode()).getJobControlMode()) &&
                 JobControlOps.getEnumByJobMode(execute.getMode()).equals(JobControlOps.SYNC)) {
             ProcessJobSync job = new ProcessJobSync(processIdentifier.getProcessDescriptionType(), jobId, dataMap);
             ProcessJobSync processJobSync = processorServiceSync.executeProcessSync(job, processIdentifier, dataMap);
             if (execute.getResponse().equalsIgnoreCase(ResponseType.DOCUMENT.getType())) {
-                return getResult(processJobSync);
+                toReturn = getResult(processJobSync);
             } else if (execute.getResponse().equalsIgnoreCase(ResponseType.RAW.getType())) {
-                return getRawResult(processJobSync);
+                toReturn = getRawResult(processJobSync);
             }
         } else {
             ProcessJob job = new ProcessJob(processIdentifier.getProcessDescriptionType(), jobId, dataMap, wps2ServerProps.CUSTOM_PROPS.MAX_PROCESS_POOLING_DELAY, wps2ServerProps.CUSTOM_PROPS.BASE_PROCESS_POOLING_DELAY);
             if (execute.getResponse().equalsIgnoreCase(ResponseType.RAW.getType())) {
                 job.setReturnRawData(true);
             }
-//            ProcessJobsInstance.INSTANCE.mapOfProcess.put(jobId, job);
-//            ProcessJobsInstance.INSTANCE.jobProcessCache.put(new Element(jobId, job));
             cacheManager.getJobProcessCache().put(new Element(jobId, job));
             StatusInfo statusInfo = new StatusInfo();
             statusInfo.setJobID(jobId.toString());
@@ -326,16 +282,14 @@ public class Wps2OperationsImpl implements Wps2Operations {
             statusInfo.setStatus(job.getState().name());
             XMLGregorianCalendar date = Wps2ServerUtils.getXMLGregorianCalendarWithDelay(job.getProcessPoolingTime());
             statusInfo.setNextPoll(date);
-            return statusInfo;
+            toReturn = statusInfo;
         }
-        return null;
+        return toReturn;
     }
 
     @Override
     public Object getStatus(GetStatus getStatus) {
         UUID jobId = UUID.fromString(getStatus.getJobID());
-//        ProcessJob job = ProcessJobsInstance.INSTANCE.mapOfProcess.get(jobId);
-//        Element element = ProcessJobsInstance.INSTANCE.jobProcessCache.get(jobId);
         Element element = cacheManager.getJobProcessCache().get(jobId);
 
         if (element == null) {
@@ -368,8 +322,6 @@ public class Wps2OperationsImpl implements Wps2Operations {
     @Override
     public Object getResult(GetResult getResult) {
         UUID jobId = UUID.fromString(getResult.getJobID());
-//        AbstractProcessJob job = ProcessJobsInstance.INSTANCE.mapOfProcess.get(jobId);
-//        Element element = ProcessJobsInstance.INSTANCE.jobProcessCache.get(jobId);
         Element element = cacheManager.getJobProcessCache().get(jobId);
         ExceptionReport exceptionReport = new ExceptionReport();
         ExceptionType exceptionType = new ExceptionType();
@@ -391,7 +343,7 @@ public class Wps2OperationsImpl implements Wps2Operations {
             return getRawResult(job);
         }
         Result result = new Result();
-        result.setExpirationDate(Wps2ServerUtils.getXMLGregorianCalendar(job.getTimeToDestroy()));
+        result.setExpirationDate(Wps2ServerUtils.getXMLGregorianCalendar(element.getExpirationTime()));
         result.setJobID(jobId.toString());
         List<DataOutputType> listO = new ArrayList<>();
         processOutputDataForProcess(job, listO);
@@ -409,7 +361,13 @@ public class Wps2OperationsImpl implements Wps2Operations {
                 }
             }
             if (isOutput && pi.getProcessOffering().getOutputTransmission().contains(DataTransmissionModeType.VALUE)) {
-                return entry.getValue();
+                Object obj;
+                if (entry.getValue() instanceof RawData) {
+                    obj = ((RawData) entry.getValue()).getBase64ConvertedData();
+                } else {
+                    obj = entry.getValue();
+                }
+                return obj;
             }
             isOutput = false;
         }
@@ -455,7 +413,15 @@ public class Wps2OperationsImpl implements Wps2Operations {
                         if (entry.getValue() == null) {
                             list.add("");
                         } else {
-                            list.add(entry.getValue().toString());
+                            String result;
+                            if (entry.getValue() instanceof byte[]) {
+                                result = Base64.getEncoder().encodeToString((byte[]) entry.getValue());
+                            } else if (entry.getValue() instanceof RawData) {
+                                result = ProcessExecutionHelper.marshallRawDataTypeResult(entry.getValue()).toString();
+                            } else {
+                                result = entry.getValue().toString();
+                            }
+                            list.add(result);
                         }
                         data.getContent().addAll(list);
                         outputType.setData(data);
@@ -480,7 +446,6 @@ public class Wps2OperationsImpl implements Wps2Operations {
     public Object dismiss(Dismiss dismiss) {
         UUID jobId = UUID.fromString(dismiss.getJobID());
         processorService.cancelProgress(jobId);
-//        Element element = ProcessJobsInstance.INSTANCE.jobProcessCache.get(jobId);
         Element element = cacheManager.getJobProcessCache().get(jobId);
         if (element == null) {
             ExceptionReport exceptionReport = new ExceptionReport();
@@ -490,7 +455,6 @@ public class Wps2OperationsImpl implements Wps2Operations {
             exceptionReport.getException().add(exceptionType);
             return exceptionReport;
         }
-//        ProcessJob processJob = ProcessJobsInstance.INSTANCE.mapOfProcess.get(jobId);
         ProcessJob processJob = (ProcessJob) element.getObjectValue();
         StatusInfo statusInfo = new StatusInfo();
         statusInfo.setJobID(jobId.toString());

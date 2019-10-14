@@ -5,13 +5,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ro.uti.ksme.wps.wps2_server.pojo.ows._2.BoundingBoxType;
 import ro.uti.ksme.wps.wps2_server.pojo.wps._2.BoundingBoxData;
-import ro.uti.ksme.wps.wps2_server.pojo.wps._2.DataTransmissionModeType;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.JaxbContainer;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.attributes.*;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.input.BoundingBoxInput;
+import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.input.LiteralDataInput;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.output.RawDataOutput;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.process.Process;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.JobControlOps;
+import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessImplementation;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
@@ -28,15 +29,14 @@ import java.nio.file.Paths;
  */
 @Process(processAttr = @ProcessAttr(
         version = "0.0.0_a",
-        jobControl = {JobControlOps.ASYNC, JobControlOps.SYNC},
-        dataTransmissionType = {DataTransmissionModeType.VALUE, DataTransmissionModeType.REFERENCE}
+        jobControl = {JobControlOps.ASYNC, JobControlOps.SYNC}
 ),
         descriptionType = @DescriptionTypeAttr(
                 keywords = {"ProcessKeyWord"},
                 title = "This is a demo process for demonstrating WPS2 server execution that returns a static local file .tiff",
                 identifier = "demoProcessDownloadTiff"
         ))
-public class DemoWPS2Process {
+public class DemoWPS2Process implements ProcessImplementation {
     private static final Logger LOGGER = LoggerFactory.getLogger(DemoWPS2Process.class);
 
     @InputAnnotation
@@ -48,6 +48,15 @@ public class DemoWPS2Process {
             ),
             boundingBoxAttr = @BoundingBoxAttr)
     private Object boundingBoxInput;
+
+    @InputAnnotation
+    @LiteralDataInput(inputAttr = @InputAttr(minOccurs = 0, maxOccurs = 1),
+    descriptionType = @DescriptionTypeAttr(
+            title = "This is an optional Input of primitive type",
+            identifier = "optionalInput"
+    ),
+    literalAttr = @LiteralDataAttr)
+    private String testInput;
 
     @OutputAnnotation
     @RawDataOutput(
@@ -62,8 +71,8 @@ public class DemoWPS2Process {
                     fileTypes = {".tiff"}
             )
     )
-    public Object execute() {
-        byte[] bytes = null;
+    @Override
+    public byte[] execute() {
         LOGGER.info("The process was identified and called via reflection...");
         if (this.boundingBoxInput != null) {
             LOGGER.info("Received the following Input of type BoundingBoxData from the request:\n" + this.boundingBoxInput.toString());
@@ -88,6 +97,10 @@ public class DemoWPS2Process {
                     bboxType.getUpperCorner().forEach(d -> logMsg.append(d).append(" "));
                     logMsg.append("\nLowerCorner = ");
                     bboxType.getLowerCorner().forEach(d -> logMsg.append(d).append(" "));
+                    if (testInput != null) {
+                        logMsg.append("\n").append("The optional Input was provided and has value = ").append(testInput);
+                    }
+                    LOGGER.info(logMsg.toString());
                     Thread.sleep(500);
                     LOGGER.info("Continuing processing to return dummy .tiff...");
 
@@ -95,18 +108,17 @@ public class DemoWPS2Process {
                     if (url != null) {
                         File file = Paths.get(url.toURI()).toFile();
                         if (file.exists()) {
-                            bytes = IOUtils.toByteArray(new FileInputStream(file));
+                            return IOUtils.toByteArray(new FileInputStream(file));
                         }
                     }
                 }
             }
-
+            LOGGER.info("Returning processing result...");
         } catch (Exception e) {
-            LOGGER.error("ERROR >>>> In processing: " + e.getMessage(), e);
+            LOGGER.info(e.getMessage(), e);
         }
 
-        LOGGER.info("Returning processing result...");
-        return bytes;
+        return null;
     }
 
     public Object getBoundingBoxInput() {

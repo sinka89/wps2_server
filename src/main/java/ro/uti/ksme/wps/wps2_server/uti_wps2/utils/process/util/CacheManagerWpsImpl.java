@@ -2,10 +2,8 @@ package ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util;
 
 import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheManager;
-import net.sf.ehcache.config.CacheConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.Wps2ServerProps;
 
 import javax.ejb.ConcurrencyManagement;
 import javax.ejb.ConcurrencyManagementType;
@@ -15,6 +13,7 @@ import java.net.URL;
 
 /**
  * @author Bogdan-Adrian Sincu created on 10/9/2019
+ * Class that creates an instance of EhCache manager and Cache for ProcessJobs that contain the result of the process itself
  */
 @Singleton
 @Startup

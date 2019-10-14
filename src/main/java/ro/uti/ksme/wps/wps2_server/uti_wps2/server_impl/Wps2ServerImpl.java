@@ -23,6 +23,10 @@ import java.io.StringWriter;
 import java.util.Collection;
 import java.util.Optional;
 
+/**
+ * @author Bogdan-Adrian Sincu
+ * Main Wps2 server class -> handles marshalling and unmarshalling requests from Handler
+ */
 @Singleton
 @Startup
 @ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)

@@ -6,7 +6,7 @@ public interface ProcessExecutionListener {
 
     void setProcessState(ProcessState processState);
 
-    enum ProcessState {RUNNING, FINISHED, FAILED, ACCEPTED, IDLE}
+    enum ProcessState {RUNNING, FINISHED, FAILED, ACCEPTED, IDLE, CANCELED}
 
     enum LogType {INFO, WARN, ERROR}
 }

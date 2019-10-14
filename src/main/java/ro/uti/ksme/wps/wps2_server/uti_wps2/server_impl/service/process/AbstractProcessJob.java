@@ -11,7 +11,6 @@ public abstract class AbstractProcessJob {
     protected ProcessDescriptionType process;
     protected UUID id;
     protected Map<URI, Object> dataMap;
-    protected long timeToDestroy = 0;
     protected boolean returnRawData = false;
 
     AbstractProcessJob(ProcessDescriptionType process, UUID id, Map<URI, Object> dataMap) {
@@ -30,14 +29,6 @@ public abstract class AbstractProcessJob {
 
     public UUID getId() {
         return id;
-    }
-
-    public long getTimeToDestroy() {
-        return timeToDestroy;
-    }
-
-    public synchronized void setTimeToDestroy(long timeToDestroy) {
-        this.timeToDestroy = timeToDestroy;
     }
 
     public boolean isReturnRawData() {

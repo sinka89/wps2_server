@@ -1,7 +1,6 @@
 package ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.service.process;
 
 import ro.uti.ksme.wps.wps2_server.pojo.wps._2.ProcessDescriptionType;
-import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.Wps2ServerProps;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -59,9 +58,6 @@ public class ProcessJob extends AbstractProcessJob implements ProcessExecutionLi
     public void setProcessState(ProcessState processState) {
         if (startTime == -1) {
             startTime = System.currentTimeMillis();
-        }
-        if (processState.equals(ProcessState.FINISHED) && timeToDestroy == 0) {
-            timeToDestroy = System.currentTimeMillis() + Wps2ServerProps.DESTROY_TIME_MILLI;
         }
         state = processState;
     }

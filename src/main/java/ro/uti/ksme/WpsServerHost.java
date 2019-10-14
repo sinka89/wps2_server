@@ -16,6 +16,7 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.net.InetSocketAddress;
 import java.net.URL;
+import java.nio.file.Paths;
 import java.security.KeyStore;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
@@ -55,9 +56,10 @@ public class WpsServerHost {
                 } else {
                     HttpsServer httpsServer = HttpsServer.create(inetSocketAddress, 0);
                     SSLContext sslContext = SSLContext.getInstance("TLS");
-                    char[] password = "nuk1234@33L~ar".toCharArray();
+                    char[] password = Wps2ServerProps.getjksTokenPassword().toCharArray();
                     KeyStore ks = KeyStore.getInstance("JKS");
-                    FileInputStream fis = new FileInputStream("wps2_server.jks");
+                    URL resource = WpsServerHost.class.getClassLoader().getResource("wps2_server.jks");
+                    FileInputStream fis = new FileInputStream(Paths.get(resource.toURI()).toFile());
                     ks.load(fis, password);
                     KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
                     kmf.init(ks, password);
@@ -79,6 +81,7 @@ public class WpsServerHost {
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
+            System.exit(-1);
         }
     }
 

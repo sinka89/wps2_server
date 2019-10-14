@@ -26,7 +26,6 @@ public class Wps2ServerProps {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Wps2ServerProps.class);
     private static final String SERVER_PROPERTIES = "wps2_config.properties";
-    public static final long DESTROY_TIME_MILLI = getDestroyTimeMilli();
     public ServerGlobalProperties SERVER_GLOBAL_PROPERTIES;
     public ServerIdentificationProps SERVER_IDENTIFICATION_PROPS;
     public ServiceProviderProps SERVICE_PROVIDER_PROPS;
@@ -89,78 +88,17 @@ public class Wps2ServerProps {
         return threadCount;
     }
 
-    private static long getDestroyTimeMilli() {
-        long destr = 0;
+    public static String getjksTokenPassword() throws NullPointerException {
+        String pass = "";
         try {
             Properties wpsProps = new Properties();
             URL url = Wps2ServerProps.class.getClassLoader().getResource(SERVER_PROPERTIES);
-            if (url != null) {
-                wpsProps.load(new InputStreamReader(url.openStream()));
-                String destroyDelay = wpsProps.getProperty("DESTROY_DELAY");
-                if (destroyDelay != null) {
-                    destr = getDestroyDelayMilli(destroyDelay);
-                }
-            } else {
-                LOGGER.error("ERROR >>>> Could not get DESTROY_DELAY, using default: 0Y0D12H0M0S");
-            }
+            wpsProps.load(new InputStreamReader(url.openStream()));
+            pass = wpsProps.getProperty("HTTPS_SERVER_JKS_TOKEN_PASS");
         } catch (Exception e) {
-            LOGGER.error("ERROR >>>> Could not get PROP 'DESTROY_DELAY', using default: 0Y0D12H0M0S Cause:\n" + e.getMessage(), e);
+            LOGGER.error("ERROR >>>> Could not get 'PROP HTTPS_SERVER_JKS_TOKEN_PASS'");
         }
-        if (destr == 0) {
-            destr = getDestroyDelayMilli("0Y0D12H0M0S");
-        }
-        return destr;
-    }
-
-    private static long getDestroyDelayMilli(String destroyDelay) {
-        final int secToMilli = 1000;
-        final int minToMilli = 60 * secToMilli;
-        final int hoursToMilli = 60 * minToMilli;
-        final int daysToMilli = 24 * hoursToMilli;
-        final int yearsToMilli = (int) (365.25 * daysToMilli);
-
-        int years = Integer.decode(destroyDelay.substring(0, destroyDelay.indexOf("Y")));
-        int days = Integer.decode(destroyDelay.substring(destroyDelay.indexOf("Y") + 1, destroyDelay.indexOf("D")));
-        int hours = Integer.decode(destroyDelay.substring(destroyDelay.indexOf("D") + 1, destroyDelay.indexOf("H")));
-        int min = Integer.decode(destroyDelay.substring(destroyDelay.indexOf("H") + 1, destroyDelay.indexOf("M")));
-        int sec = Integer.decode(destroyDelay.substring(destroyDelay.indexOf("M") + 1, destroyDelay.indexOf("S")));
-        return sec * secToMilli + min * minToMilli + hours * hoursToMilli + days * daysToMilli + years * yearsToMilli;
-    }
-
-    // not used anymore replace by EHCache
-    public static Integer getCleanUpTaskStartDelay() {
-        Integer seconds = 60;
-        try {
-            Properties wpsProps = new Properties();
-            URL url = Wps2ServerProps.class.getClassLoader().getResource(SERVER_PROPERTIES);
-            if (url == null) {
-                return seconds;
-            } else {
-                wpsProps.load(new InputStreamReader(url.openStream()));
-                seconds = Integer.decode(wpsProps.getProperty("CLEAN_UP_TASK_START_DELAY"));
-            }
-        } catch (Exception e) {
-            LOGGER.error("ERROR >>>> Could not get PROP 'CLEAN_UP_TASK_START_DELAY', using default timer: " + seconds + " Cause:\n" + e.getMessage(), e);
-        }
-        return seconds;
-    }
-
-    // not used anymore replace by EHCache
-    public static Integer getCleanUpTaskInterval() {
-        Integer seconds = 60;
-        try {
-            Properties wpsProps = new Properties();
-            URL url = Wps2ServerProps.class.getClassLoader().getResource(SERVER_PROPERTIES);
-            if (url == null) {
-                return seconds;
-            } else {
-                wpsProps.load(new InputStreamReader(url.openStream()));
-                seconds = Integer.decode(wpsProps.getProperty("CLEAN_UP_TASK_INTERVAL"));
-            }
-        } catch (Exception e) {
-            LOGGER.error("ERROR >>>> Could not get PROP 'CLEAN_UP_TASK_INTERVAL', using default timer: " + seconds + " Cause:\n" + e.getMessage(), e);
-        }
-        return seconds;
+        return pass;
     }
 
     public class ServerGlobalProperties {

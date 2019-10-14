@@ -8,7 +8,6 @@
 
 package ro.uti.ksme.wps.wps2_server.pojo.wps._2;
 
-import com.sun.xml.internal.ws.developer.Serialization;
 import ro.uti.ksme.wps.wps2_server.pojo.ows._2.BoundingBoxType;
 import ro.uti.ksme.wps.wps2_server.pojo.ows._2.WGS84BoundingBoxType;
 

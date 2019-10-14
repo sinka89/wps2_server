@@ -11,7 +11,7 @@ import java.net.URI;
 import java.util.Map;
 import java.util.UUID;
 
-public class ProcessWorker implements Runnable, PropertyChangeListener {
+public class ProcessWorker implements CancellableRunnable, PropertyChangeListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProcessWorker.class);
 
@@ -57,10 +57,17 @@ public class ProcessWorker implements Runnable, PropertyChangeListener {
             }
             progressMonitor.setTaskName(title + " : Execution");
             processManager.executeProcess(job.getId(), processIdentifier, dataMap, processIdentifier.getProperties(), progressMonitor);
+            if (progressMonitor.isCanceled()) {
+                return;
+            }
 
             progressMonitor.setTaskName(title + " : PostProcessing");
             if (job != null) {
                 job.appendLog(ProcessExecutionListener.LogType.INFO, "Post-Processing.");
+            }
+
+            if (progressMonitor.isCanceled()) {
+                return;
             }
 
 
@@ -86,8 +93,14 @@ public class ProcessWorker implements Runnable, PropertyChangeListener {
     @Override
     public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
         if (propertyChangeEvent.getPropertyName().equals(ProgressMonitor.PROP_CANCEL)) {
+            job.setProcessState(ProcessExecutionListener.ProcessState.CANCELED);
             processManager.cancelProcess(job.getId());
         }
+    }
+
+    @Override
+    public void cancel() {
+        progressMonitor.cancel();
     }
 
     public UUID getJobId() {

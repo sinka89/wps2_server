@@ -11,6 +11,11 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.attributes
 import java.math.BigInteger;
 import java.util.*;
 
+/**
+ * @author Bogdan-Adrian Sincu
+ *
+ * Class used to convert Process java classes to WPS2 Objects that can be marshalled with the provided info
+ */
 public class ObjectAnnotationConverter {
 
     public static LiteralDataType annotationToObject(LiteralDataAttr literalDataAttr, DataType dataType, Object defaultValueStr) throws MalformedModelException {
@@ -65,7 +70,7 @@ public class ObjectAnnotationConverter {
         descriptionType.getTitle().addAll(titleList);
 
         //set description
-        if (descriptionTypeAttr.description().isEmpty()) {
+        if (!descriptionTypeAttr.description().isEmpty()) {
             List<LanguageStringType> descriptionList = new ArrayList<>();
             LanguageStringType r = new LanguageStringType();
             r.setValue(descriptionTypeAttr.description().trim());

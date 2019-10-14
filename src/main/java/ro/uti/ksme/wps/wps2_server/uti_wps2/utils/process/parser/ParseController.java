@@ -22,6 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * @author Bogdan-Adrian Sincu
+ * Main Parser that Generates ProcessIdentifier based on the java process classes
+ */
 @Startup
 @Singleton
 @ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
@@ -103,6 +107,9 @@ public class ParseController {
             }
         }
         for (Method m : cls.getDeclaredMethods()) {
+            if (m.isSynthetic()) {
+                continue;
+            }
             m.setAccessible(true);
             if (m.getName().equals("execute")) {
                 for (Annotation a : m.getDeclaredAnnotations()) {

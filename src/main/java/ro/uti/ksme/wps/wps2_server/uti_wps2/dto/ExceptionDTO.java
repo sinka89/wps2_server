@@ -4,9 +4,6 @@ public class ExceptionDTO {
     private Integer status;
     private String exMsg;
 
-    public ExceptionDTO() {
-    }
-
     public ExceptionDTO(Integer status, String exMsg) {
         this.status = status;
         this.exMsg = exMsg;

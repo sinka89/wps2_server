@@ -10,6 +10,11 @@ import javax.ejb.*;
 import java.net.URI;
 import java.util.Map;
 
+/**
+ * @author Bogdan-Adrian Sincu
+ * Class used to process sync execution requests
+ *
+ */
 @Singleton
 @Startup
 @ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
@@ -20,7 +25,8 @@ public class ProcessorServiceSyncImpl implements ProcessorServiceSync {
     public ProcessJobSync executeProcessSync(ProcessJobSync job, ProcessIdentifier processIdentifier, Map<URI, Object> dataMap) {
         ProcessDescriptionType process = processIdentifier.getProcessDescriptionType();
         Class<?> clazz = WpsProcessReflectionUtil.getProcessClassBasedOnIdentifier(process.getIdentifier().getValue());
-        ProcessExecutionHelper.createProcessAndExecute(process, clazz, dataMap);
+        Object processObj = ProcessExecutionHelper.createProcess(process, clazz, dataMap);
+        ProcessExecutionHelper.executeAndGetResult(process, processObj, dataMap);
         return job;
     }
 }

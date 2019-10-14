@@ -19,7 +19,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -49,7 +48,7 @@ public class BoundingBoxParser implements Parser {
             supCRS.add(crs);
         }
         bboxData.getSupportedCRS().addAll(supCRS);
-        bboxData.getFormat().addAll(FormatFactory.getFormatFromExtensions(FormatFactory.TEXT_EXTENSION));
+        bboxData.getFormat().addAll(FormatFactory.getFormatFromExtensions(FormatFactory.XML_EXTENSION));
         ro.uti.ksme.wps.wps2_server.pojo.wps._2.ObjectFactory wpsFactory = new ro.uti.ksme.wps.wps2_server.pojo.wps._2.ObjectFactory();
         JAXBElement<BoundingBoxData> boundingBoxData = wpsFactory.createBoundingBoxData(bboxData);
         InputDescriptionType input = new InputDescriptionType();
@@ -84,7 +83,7 @@ public class BoundingBoxParser implements Parser {
         }
         bboxData.getSupportedCRS().addAll(supCRS);
         bboxData.setBoundingBox(boundingBox);
-        bboxData.getFormat().addAll(FormatFactory.getFormatFromExtensions(FormatFactory.TEXT_EXTENSION));
+        bboxData.getFormat().addAll(FormatFactory.getFormatFromExtensions(FormatFactory.XML_EXTENSION));
         ro.uti.ksme.wps.wps2_server.pojo.wps._2.ObjectFactory wpsFactory = new ro.uti.ksme.wps.wps2_server.pojo.wps._2.ObjectFactory();
         JAXBElement<BoundingBoxData> boundingBoxData = wpsFactory.createBoundingBoxData(bboxData);
         OutputDescriptionType output = new OutputDescriptionType();
