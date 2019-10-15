@@ -57,9 +57,8 @@ public class WpsServerHost {
                     HttpsServer httpsServer = HttpsServer.create(inetSocketAddress, 0);
                     SSLContext sslContext = SSLContext.getInstance("TLS");
                     char[] password = Wps2ServerProps.getjksTokenPassword().toCharArray();
-                    KeyStore ks = KeyStore.getInstance("JKS");
-                    URL resource = WpsServerHost.class.getClassLoader().getResource("wps2_server.jks");
-                    FileInputStream fis = new FileInputStream(Paths.get(resource.toURI()).toFile());
+                    KeyStore ks = KeyStore.getInstance("PKCS12");
+                    FileInputStream fis = new FileInputStream("wps2_server.pfx");
                     ks.load(fis, password);
                     KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
                     kmf.init(ks, password);
@@ -76,7 +75,14 @@ public class WpsServerHost {
                 container.shutdown();
                 if (LOGGER.isDebugEnabled()) {
                     exec = System.currentTimeMillis() - exec;
-                    LOGGER.info("HttpsServer Started in " + exec + " ms");
+                    StringBuilder sb = new StringBuilder();
+                    if (isHttps) {
+                        sb.append("HttpsServer Started in ");
+                    } else {
+                        sb.append("HttpServer Started in ");
+                    }
+                    sb.append(exec).append(" ms");
+                    LOGGER.info(sb.toString());
                 }
             }
         } catch (Exception e) {
