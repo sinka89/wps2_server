@@ -2,7 +2,11 @@
 
 Testing purpose only at the moment...
 
-wps2_config.properties -> define server handler endpoint / nr of threads to use basic props / default props
+wps2_config.properties -> define server endpoint / nr of threads to use basic props / default props etc
+
+Only supports POST with xml in body
+
+As default the server_url is localhost and port 9001 * to test use non ssl endpoint and post xml like in the examples provided in type_of_requests (ex: http://localhost:9001/wps)
 
 **What works**:
 EhCache is used to manage and store the Results (mandatory config otherwise the server will not start -> ehcache.xml)
