@@ -11,7 +11,7 @@ As default the server_url is localhost and port 9001 * to test use non ssl endpo
 For https generate a keystore like the one /wps2_server.pfx (ex: keytool -genkey -alias wps2_server -keystore wps2_server.pfx -storetype PKCS12 -keyalg RSA -storepass password -validity 730 -keysize 2048), change prop HTTPS_SERVER_JKS_TOKEN_PASS with the password provided and also set IS_SERVER_HTTPS prop to true, now the server will accept only https connections.
 
 **Build & Execution**
-To build use ant _DEPLOY_SERVER which creates a folder inside {build.dir}/deploy. Inside the folder server use the following command: "java -Xmx512m -cp "wps2_server-1.0-SNAPSHOT.jar;lib/*" ro.uti.ksme.WpsServerHost"
+To build mvn clean install inside folder then use provided _deploy_server.bat to start.
 
 **What works**:
 EhCache is used to manage and store the Results (mandatory config otherwise the server will not start -> ehcache.xml)
