@@ -18,9 +18,12 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.net.URL;
 import java.nio.file.Paths;
+
+import static org.jboss.weld.environment.deployment.WeldResourceLoader.getClassLoader;
 
 /**
  * @author Bogdan-Adrian Sincu created on 10/8/2019
@@ -104,13 +107,7 @@ public class DemoWPS2Process implements ProcessImplementation {
                     Thread.sleep(500);
                     LOGGER.info("Continuing processing to return dummy .tiff...");
 
-                    URL url = this.getClass().getClassLoader().getResource("dummy_result.tiff");
-                    if (url != null) {
-                        File file = Paths.get(url.toURI()).toFile();
-                        if (file.exists()) {
-                            return IOUtils.toByteArray(new FileInputStream(file));
-                        }
-                    }
+                    return IOUtils.toByteArray(this.getClass().getResourceAsStream("/dummy_result.tiff"));
                 }
             }
             LOGGER.info("Returning processing result...");

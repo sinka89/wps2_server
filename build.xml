@@ -1,7 +1,6 @@
 <project name="WPS_2_Server">
     <property environment="env"/>
     <property name="maven.home" value="${env.M2_HOME}"/>
-    <property name="build.dir" value="${env.M2_BUILD_BASEPATH}"/>
 
     <macrodef name="maven">
         <attribute name="options" default=""/>
@@ -29,6 +28,17 @@
             </java>
         </sequential>
     </macrodef>
+
+    <target name="_DEPLOY_SERVER">
+        <maven goal="clean" basedir="."/>
+        <maven goal="install" basedir="." options="-DskipTests"/>
+        <maven goal="dependency:copy-dependencies" basedir="." options="-DoutputDirectory=./target/deploy/lib"/>
+        <copy todir="./target/deploy/">
+            <fileset dir="./target/">
+                <include name="*.jar"/>
+            </fileset>
+        </copy>
+    </target>
 
     <target name="generateJAXB_WPS2_classes">
         <maven goal="clean" basedir="."/>

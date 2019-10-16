@@ -52,18 +52,15 @@ public class DemoRawDataProcessWithRef implements ProcessImplementation {
         try {
             LOGGER.info("You provided the path " + pathProvided);
             Thread.sleep(200);
-            LOGGER.info("Checking if dummy file is present and creating \"reference\" (getting path) to it...");
+            LOGGER.info("Doing stuff...");
             Thread.sleep(200);
-            URL url = this.getClass().getClassLoader().getResource("dummy_result.tiff");
-            if (url != null) {
-                String location = url.toString().substring(0, url.toString().lastIndexOf("/") + 1);
+            URL url = new URL("http://localhost/dummy_reference");
 
-                LOGGER.info("Processing stuff...");
-                Thread.sleep(600);
+            LOGGER.info("Processing stuff...");
+            Thread.sleep(600);
 
-                LOGGER.info("Processing complete the requested resource is at location: " + location + pathProvided);
-                return url.toString();
-            }
+            LOGGER.info("Processing complete the requested resource is at location: " + url.toString() + "/" + pathProvided);
+            return url.toString();
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }

@@ -12,11 +12,6 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.FormatFactory;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.JobControlOps;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessImplementation;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.net.URL;
-import java.nio.file.Paths;
-
 /**
  * @author Bogdan-Adrian Sincu created on 10/7/2019
  */
@@ -56,18 +51,12 @@ public class DemoRawDataProcess implements ProcessImplementation {
     public RawData execute() {
         try {
             Object toReturn = null;
-            URL url = this.getClass().getClassLoader().getResource("dummy_result.tiff");
-            if (url != null) {
-                File file = Paths.get(url.toURI()).toFile();
-                if (file.exists()) {
-                    byte[] bytes = IOUtils.toByteArray(new FileInputStream(file));
-                    RawData rawData = new RawData(FormatFactory.getFormatFromExtensions(FormatFactory.TIFF_EXTENSION));
-                    rawData.setFile(true);
-                    rawData.setDirectory(false);
-                    rawData.setBase64ConvertedData(bytes);
-                    return rawData;
-                }
-            }
+            byte[] bytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/dummy_result.tiff"));
+            RawData rawData = new RawData(FormatFactory.getFormatFromExtensions(FormatFactory.TIFF_EXTENSION));
+            rawData.setFile(true);
+            rawData.setDirectory(false);
+            rawData.setBase64ConvertedData(bytes);
+            return rawData;
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }
