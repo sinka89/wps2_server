@@ -18,10 +18,12 @@ EhCache is used to manage and store the Results (mandatory config otherwise the 
 
  - GetCapabilities type of requests (ex: type_of_requests/executeRequest.xml)
  - DescribeProcess type of requests (ex: type_of_requests/describeProcess.xml)
- - ExecuteProcess type of requests (ex: type_of_requests/executeRequest.xml)
+ - ExecuteProcess type of requests (ex: type_of_requests/executeRequestAsync.xml, type_of_requests/executeRequestSync.xml)
  - GetStatus type of requests (ex: type_of_requests/getStatus.xml)
  - GetResult type of requests (ex: type_of_requests/getResult.xml)
  - Dismiss type of requests (ex: type_of_requests/dismissProcess.xml)
+ 
+Note the difference from sync / async is only the mode attribute. If using async you can query for the status / result of the process using the returned uuid, with the GetStatus.xml or GetResult.xml request. Also on the async requests the option for Dismiss is implemented which terminates the process and silently logs the possible errors (ex: ThreadInterruptEx...)
 
         * Process *
         The process definition location is define statically in the WpsProcessReflectionUtil and loaded / parsed based on annotations
@@ -33,8 +35,8 @@ EhCache is used to manage and store the Results (mandatory config otherwise the 
         Supports multiple inputs and only one output at the moment
   
   
-* xmlExecute: Process modes (JobControlOptions) supported: "sync" "async" **Note that if the process is not specifically defined to support sync in the annotation the async default will be used
-* xmlExecute: Process responses supported: "document" "raw" **The document response type will try to wrap in a xml the raw returns as is to the client
+* xmlExecute: Process modes (JobControlOptions) supported: "sync" "async" **Note that if the process is not specifically defined to support sync in the annotation the async default will be used (executeRequest xml attribute <mode>)
+* xmlExecute: Process responses supported: "document" "raw" **The document response type will try to wrap in a xml the raw returns as is to the client (executeRequest xml attribute <response>)
 
 `The executeProcess request will dictate the response type and cannot be changed after execution is completed... the process must be rerun`
 
