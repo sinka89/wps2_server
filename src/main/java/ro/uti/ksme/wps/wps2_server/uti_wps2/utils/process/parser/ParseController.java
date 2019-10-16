@@ -35,6 +35,9 @@ public class ParseController {
     private List<Parser> parserList;
     private ProcessParser processParser;
 
+    /**
+     * Instantiates the list of custom parsers available to use in comparing and calling the parsing for the specific INPUT/OUTPUT of each implementation
+     */
     public ParseController() {
         parserList = new ArrayList<>();
         parserList.add(new LiteralDataParser());

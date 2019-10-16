@@ -20,6 +20,7 @@ import java.util.Arrays;
 
 /**
  * @author Bogdan-Adrian Sincu created on 10/4/2019
+ * Example of process that accepts a Modified wps:BoundingBoxData(with ows:BoundingBoxType inside) does something and returns a new BoundingBoxData obj
  */
 @Process(descriptionType = @DescriptionTypeAttr(
         title = "This is a demo process for demonstrating WPS2 server execution that accepts a BoundingBoxData and returns one",

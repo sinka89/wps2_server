@@ -14,6 +14,7 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessImplementa
 
 /**
  * @author Bogdan-Adrian Sincu created on 10/7/2019
+ * RawData extension example... receives something -> process -> returns a RawData Object with some byte data inside
  */
 @SuppressWarnings("ALL")
 @Process(processAttr = @ProcessAttr(
@@ -55,7 +56,7 @@ public class DemoRawDataProcess implements ProcessImplementation {
             RawData rawData = new RawData(FormatFactory.getFormatFromExtensions(FormatFactory.TIFF_EXTENSION));
             rawData.setFile(true);
             rawData.setDirectory(false);
-            rawData.setBase64ConvertedData(bytes);
+            rawData.setByteData(bytes);
             return rawData;
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);

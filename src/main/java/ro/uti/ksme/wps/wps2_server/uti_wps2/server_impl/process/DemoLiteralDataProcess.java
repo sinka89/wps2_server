@@ -9,6 +9,10 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.process.Pr
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.JobControlOps;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessImplementation;
 
+/**
+ * @author Bogdan-Adrian Sincu
+ * Example of process that accepts a literalData input and returns literlData
+ */
 @Process(descriptionType = @DescriptionTypeAttr(
         title = "Process to demonstrate Literal data passing and processing",
         identifier = "literalDataProcess",

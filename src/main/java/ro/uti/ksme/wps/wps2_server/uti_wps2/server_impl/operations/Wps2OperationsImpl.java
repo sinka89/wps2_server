@@ -31,6 +31,7 @@ import java.util.*;
 
 /**
  * @author Bogdan-Adrian Sincu
+ * Class used to execute specific operations based on the type received from the wps server impl
  */
 @Startup
 @Singleton
@@ -363,7 +364,7 @@ public class Wps2OperationsImpl implements Wps2Operations {
             if (isOutput && pi.getProcessOffering().getOutputTransmission().contains(DataTransmissionModeType.VALUE)) {
                 Object obj;
                 if (entry.getValue() instanceof RawData) {
-                    obj = ((RawData) entry.getValue()).getBase64ConvertedData();
+                    obj = ((RawData) entry.getValue()).getByteData();
                 } else {
                     obj = entry.getValue();
                 }

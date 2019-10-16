@@ -24,7 +24,6 @@ import java.util.List;
 /**
  * @author Bogdan-Adrian Sincu created on 10/7/2019
  */
-@SuppressWarnings("Duplicates")
 public class BoundingBoxParser implements Parser {
     @Override
     public InputDescriptionType parseInput(Field f, Object defaultValue, Class cls) throws MalformedModelException {

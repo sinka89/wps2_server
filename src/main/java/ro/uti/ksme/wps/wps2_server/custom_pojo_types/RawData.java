@@ -14,7 +14,7 @@ import java.util.List;
  * Folder implementation is not done
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "RawData", propOrder = {"isFile", "isDirectory", "fileTypes", "base64ConvertedData"})
+@XmlType(name = "RawData", propOrder = {"isFile", "isDirectory", "fileTypes", "byteData"})
 @XmlRootElement(name = "RawData")
 public class RawData extends ComplexDataType implements Serializable {
 
@@ -30,8 +30,8 @@ public class RawData extends ComplexDataType implements Serializable {
     @XmlElement(name = "fileTypes")
     private String[] fileTypes;
 
-    @XmlElement(name = "base64ConvertedData")
-    private byte[] base64ConvertedData;
+    @XmlElement(name = "byteData")
+    private byte[] byteData;
 
     public RawData(List<Format> formatList) {
         this.format = formatList;
@@ -41,12 +41,12 @@ public class RawData extends ComplexDataType implements Serializable {
         super();
     }
 
-    public byte[] getBase64ConvertedData() {
-        return base64ConvertedData;
+    public byte[] getByteData() {
+        return byteData;
     }
 
-    public void setBase64ConvertedData(byte[] base64ConvertedData) {
-        this.base64ConvertedData = base64ConvertedData;
+    public void setByteData(byte[] byteData) {
+        this.byteData = byteData;
     }
 
     public boolean isFile() {

@@ -12,8 +12,14 @@ import java.lang.annotation.Target;
 @Target(ElementType.ANNOTATION_TYPE)
 public @interface RawDataAttr {
 
+    /**
+     * true if the result is directory... Not implemented
+     */
     boolean isDirectory() default false;
 
+    /**
+     * true if the result is a file (probably extend to support multiple files)
+     */
     boolean isFile() default true;
 
     String[] fileTypes() default {};
