@@ -5,8 +5,23 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>ro.uti</groupId>
-    <artifactId>wps2_server</artifactId>
+    <artifactId>wps2_impl</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <name>Wps 2 Implementation S + C</name>
+
+    <properties>
+        <slf4j-version>1.7.28</slf4j-version>
+        <java.ee.api.verions>8.0</java.ee.api.verions>
+        <build.basepath>${env.M2_BUILD_BASEPATH}</build.basepath>
+        <ehcache.version>2.10.6</ehcache.version>
+        <weld.version>3.0.2.Final</weld.version>
+        <compile.optimize>true</compile.optimize>
+        <spring.version>5.2.1.RELEASE</spring.version>
+        <global.version>1.0-SNAPSHOT</global.version>
+        <reflections.version>0.9.10</reflections.version>
+        <commons.io.version>2.6</commons.io.version>
+    </properties>
+
     <build>
         <plugins>
             <plugin>
@@ -15,69 +30,20 @@
                 <configuration>
                     <source>8</source>
                     <target>8</target>
+                    <encoding>UTF-8</encoding>
+                    <optimize>${compile.optimize}</optimize>
                 </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <phase>install</phase>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>${project.build.directory}/lib</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>
+    <modules>
+        <module>xsd_wps2_pojos</module>
+        <module>wps2_server_impl</module>
+        <module>wps2_client_impl</module>
+        <module>wps2_common</module>
+    </modules>
 
-    <properties>
-        <slf4j-version>1.7.28</slf4j-version>
-        <java.ee.api.verions>8.0</java.ee.api.verions>
-        <build.basepath>${env.M2_BUILD_BASEPATH}</build.basepath>
-        <ehcache.version>2.10.6</ehcache.version>
-        <weld.version>3.0.2.Final</weld.version>
-    </properties>
-
-    <packaging>jar</packaging>
-
-    <profiles>
-        <profile>
-            <id>generateWps2_Pojo</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.jvnet.jaxb2.maven2</groupId>
-                        <artifactId>maven-jaxb2-plugin</artifactId>
-                        <version>0.14.0</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>generate</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <extension>true</extension>
-                            <episode>true</episode>
-                            <schemaDirectory>src/main/resources/xsd</schemaDirectory>
-                            <bindingDirectory>src/main/resources/xjb/wps/2.0.0</bindingDirectory>
-                            <bindingIncludes>
-                                <include>bindings_wps2.xml</include>
-                            </bindingIncludes>
-                            <schemaIncludes>
-                                <include>wps/2.0.0/wps.xsd</include>
-                            </schemaIncludes>
-                            <generateDirectory>src/main/java</generateDirectory>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
+    <packaging>pom</packaging>
 
     <dependencies>
         <dependency>
@@ -98,37 +64,26 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-            <version>${java.ee.api.verions}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.jboss.weld.se</groupId>
-            <artifactId>weld-se-core</artifactId>
-            <version>${weld.version}</version>
-        </dependency>
-        <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.6</version>
+            <version>${commons.io.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.reflections</groupId>
-            <artifactId>reflections</artifactId>
-            <version>0.9.10</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.sf.ehcache</groupId>
-            <artifactId>ehcache</artifactId>
-            <version>${ehcache.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>commons-configuration</groupId>
-            <artifactId>commons-configuration</artifactId>
-            <version>1.10</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>javax</groupId>-->
+            <!--<artifactId>javaee-api</artifactId>-->
+            <!--<version>${java.ee.api.verions}</version>-->
+        <!--</dependency>-->
+        <!--<dependency>-->
+            <!--<groupId>org.jboss.weld.se</groupId>-->
+            <!--<artifactId>weld-se-core</artifactId>-->
+            <!--<version>${weld.version}</version>-->
+        <!--</dependency>-->
+        <!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
+        <!--<dependency>-->
+            <!--<groupId>commons-configuration</groupId>-->
+            <!--<artifactId>commons-configuration</artifactId>-->
+            <!--<version>1.10</version>-->
+        <!--</dependency>-->
 
     </dependencies>
 

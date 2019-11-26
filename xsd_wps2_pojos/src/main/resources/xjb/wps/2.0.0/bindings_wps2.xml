@@ -1,0 +1,63 @@
+<jxb:bindings
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns:jxb="http://java.sun.com/xml/ns/jaxb"
+        xmlns:xjc="http://java.sun.com/xml/ns/jaxb/xjc"
+        jxb:extensionBindingPrefixes="xjc"
+        version="2.1">
+    <jxb:globalBindings
+            fixedAttributeAsConstantProperty="true"
+            typesafeEnumBase="xs:string"
+            typesafeEnumMemberName="generateName"
+            generateIsSetMethod="true">
+        <xjc:noValidator/>
+        <xjc:noValidatingUnmarshaller/>
+    </jxb:globalBindings>
+
+    <!--    Location Bindings -->
+    <jxb:bindings schemaLocation="../../../xsd/wps/2.0.0/wps.xsd" node="/xs:schema">
+        <jxb:schemaBindings>
+            <jxb:package name="ro.uti.ksme.wps.wps2.pojo.wps._2"/>
+        </jxb:schemaBindings>
+    </jxb:bindings>
+    <jxb:bindings schemaLocation="../../../xsd/ows/2.0.2/owsAll.xsd" node="/xs:schema">
+        <jxb:schemaBindings>
+            <jxb:package name="ro.uti.ksme.wps.wps2.pojo.ows._2"/>
+        </jxb:schemaBindings>
+    </jxb:bindings>
+    <jxb:bindings schemaLocation="http://www.w3.org/2001/XMLSchema.xsd" node="/xs:schema">
+        <jxb:schemaBindings>
+            <jxb:package name="ro.uti.ksme.wps.wps2.pojo.w3._2001.xmlschema"/>
+        </jxb:schemaBindings>
+    </jxb:bindings>
+    <jxb:bindings schemaLocation="http://www.w3.org/1999/xlink.xsd" node="/xs:schema">
+        <jxb:schemaBindings>
+            <jxb:package name="ro.uti.ksme.wps.wps2.pojo.w3._1999.xlink"/>
+        </jxb:schemaBindings>
+    </jxb:bindings>
+    <!--    End Location Bindings -->
+
+    <!--    Resolve Title conflict in xlink -->
+    <jxb:bindings schemaLocation="http://www.w3.org/1999/xlink.xsd" node="/xs:schema">
+        <jxb:bindings node="//xs:attributeGroup[@name='locatorAttrs']">
+            <jxb:bindings node=".//xs:attribute[@ref='xlink:title']">
+                <jxb:property name="LocatorAttrsTitle"/>
+            </jxb:bindings>
+        </jxb:bindings>
+        <jxb:bindings node="//xs:group[@name='locatorModel']">
+            <jxb:bindings node=".//xs:element[@ref='xlink:title']">
+                <jxb:property name="LocatorModelTitle"/>
+            </jxb:bindings>
+        </jxb:bindings>
+        <jxb:bindings node="//xs:attributeGroup[@name='arcAttrs']">
+            <jxb:bindings node=".//xs:attribute[@ref='xlink:title']">
+                <jxb:property name="ArcAttrsTitle"/>
+            </jxb:bindings>
+        </jxb:bindings>
+        <jxb:bindings node="//xs:group[@name='arcModel']">
+            <jxb:bindings node=".//xs:element[@ref='xlink:title']">
+                <jxb:property name="ArcModelTitle"/>
+            </jxb:bindings>
+        </jxb:bindings>
+    </jxb:bindings>
+    <!--    End Resolve Title conflict in xlink -->
+</jxb:bindings>
