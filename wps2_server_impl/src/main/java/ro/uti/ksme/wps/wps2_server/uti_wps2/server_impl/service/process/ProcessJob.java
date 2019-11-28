@@ -1,5 +1,6 @@
 package ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.service.process;
 
+import ro.uti.ksme.wps.common.utils.enums.ProcessState;
 import ro.uti.ksme.wps.wps2.pojo.wps._2.ProcessDescriptionType;
 
 import java.beans.PropertyChangeEvent;

@@ -14,9 +14,9 @@ import java.util.List;
  * @author : Bogdan-Adrian Sincu
  * Date: 10/11/2019
  * Time: 10:33 AM
- *
+ * <p>
  * Contract for Wps2 Process
- *
+ * <p>
  * listOfCancelableResources represents a list of resources that have to be manually added in the Process
  * that on dismiss the server will try to force close no matter the state of the process or result.
  */
@@ -24,8 +24,6 @@ public interface ProcessImplementation {
     Logger LOGGER = LoggerFactory.getLogger(ProcessImplementation.class);
 
     List<Object> listOfCancelableResources = new ArrayList<>();
-
-    Object execute();
 
     static void closeAdditionalResources() {
         if (!listOfCancelableResources.isEmpty()) {
@@ -43,4 +41,6 @@ public interface ProcessImplementation {
             }
         }
     }
+
+    Object execute();
 }

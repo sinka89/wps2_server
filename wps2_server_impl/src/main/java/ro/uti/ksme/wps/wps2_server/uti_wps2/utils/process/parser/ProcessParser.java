@@ -7,9 +7,6 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.model.exceptions.MalformedMode
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.process.Process;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ObjectAnnotationConverter;
 
-//@Startup
-//@Singleton
-//@ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
 @Component
 public class ProcessParser {
     public ProcessOffering parseProcess(Class<?> cls) throws MalformedModelException {

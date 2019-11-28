@@ -11,9 +11,9 @@ public enum JobControlOps {
     DISMISS("dismiss", "dismiss");
 
     private final static Map<String, JobControlOps> mappingJobToEnum = EnumSet.allOf(JobControlOps.class).stream().collect(Collectors.toMap(JobControlOps::getMode, j -> j));
+    private final static Map<String, JobControlOps> mappingJobControlToEnum = EnumSet.allOf(JobControlOps.class).stream().collect(Collectors.toMap(JobControlOps::getJobControlMode, j -> j));
     private String mode;
     private String jobControlMode;
-    private final static Map<String, JobControlOps> mappingJobControlToEnum = EnumSet.allOf(JobControlOps.class).stream().collect(Collectors.toMap(JobControlOps::getJobControlMode, j -> j));
 
     JobControlOps(String mode, String jobControlMode) {
         this.mode = mode;

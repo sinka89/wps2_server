@@ -5,21 +5,21 @@
     <parent>
         <artifactId>wps2_impl</artifactId>
         <groupId>ro.uti</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
+    <name>WPS2 Client Implementation</name>
 
     <artifactId>wps2_client_impl</artifactId>
-    <version>${global.version}</version>
-    <properties>
-        <aspectj.version>1.9.4</aspectj.version>
-    </properties>
+    <version>1.0.0</version>
 
+    <!--https://github.com/sinka89/wps2_server-->
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <version>${maven.jar.plugin.version}</version>
                 <configuration>
                     <outputDirectory>${project.build.directory}</outputDirectory>
                 </configuration>
@@ -38,6 +38,21 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptorRefs>jar-with-dependencies</descriptorRefs>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
@@ -46,7 +61,13 @@
         <dependency>
             <groupId>ro.uti</groupId>
             <artifactId>xsd-wps2-pojos</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>${global.version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>ro.uti</groupId>
+            <artifactId>wps2_common</artifactId>
+            <version>${global.version}</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

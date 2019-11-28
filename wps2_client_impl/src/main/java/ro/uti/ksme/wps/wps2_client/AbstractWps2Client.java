@@ -1,6 +1,5 @@
 package ro.uti.ksme.wps.wps2_client;
 
-import ro.uti.ksme.wps.wps2.pojo.wps._2.WPSCapabilitiesType;
 import ro.uti.ksme.wps.wps2_client.connection_util.HttpClient;
 import ro.uti.ksme.wps.wps2_client.connection_util.HttpClientImpl;
 
@@ -13,10 +12,10 @@ import java.net.URL;
  * Date: 11/25/2019
  * Time: 4:11 PM
  */
-public abstract class AbstractWps2Client implements WPS2Client{
+public abstract class AbstractWps2Client implements WPS2Client {
 
-    protected HttpClient httpClient;
     protected final URL serverUrl;
+    protected HttpClient httpClient;
 
     public AbstractWps2Client(final URL serverUrl) {
         this(serverUrl, new HttpClientImpl());

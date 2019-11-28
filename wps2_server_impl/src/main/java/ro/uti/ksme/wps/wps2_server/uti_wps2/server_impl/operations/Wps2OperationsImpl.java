@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ro.uti.ksme.wps.common.utils.enums.JobControlOps;
+import ro.uti.ksme.wps.common.utils.enums.ProcessState;
 import ro.uti.ksme.wps.common.utils.enums.ResponseType;
 import ro.uti.ksme.wps.wps2.custom_pojo_types.RawData;
 import ro.uti.ksme.wps.wps2.pojo.ows._2.*;
@@ -189,6 +190,7 @@ public class Wps2OperationsImpl implements Wps2Operations {
                 processSummaryType.getKeywords().addAll(process.getKeywords());
                 processSummaryType.setProcessVersion(pId.getProcessOffering().getProcessVersion());
                 processSummaryType.setProcessModel(pId.getProcessOffering().getProcessModel());
+                processSummaryType.getOutputTransmission().addAll(pId.getProcessOffering().getOutputTransmission());
 
                 processSummaryTypeList.add(processSummaryType);
             }
@@ -310,8 +312,8 @@ public class Wps2OperationsImpl implements Wps2Operations {
             long milliLeft = (milliSpent / progress) * (100 - progress);
             statusInfo.setEstimatedCompletion(Wps2ServerUtils.getXMLGregorianCalendarWithDelay(milliLeft));
         }
-        if (!job.getState().equals(ProcessExecutionListener.ProcessState.FAILED) &&
-                !job.getState().equals(ProcessExecutionListener.ProcessState.FINISHED)) {
+        if (!job.getState().equals(ProcessState.FAILED) &&
+                !job.getState().equals(ProcessState.FINISHED)) {
             XMLGregorianCalendar date = Wps2ServerUtils.getXMLGregorianCalendarWithDelay(job.getProcessPoolingTime());
             statusInfo.setNextPoll(date);
         }
@@ -332,7 +334,7 @@ public class Wps2OperationsImpl implements Wps2Operations {
         }
 
         AbstractProcessJob job = (AbstractProcessJob) element.getObjectValue();
-        if (!((ProcessJob) job).getState().equals(ProcessExecutionListener.ProcessState.FINISHED)) {
+        if (!((ProcessJob) job).getState().equals(ProcessState.FINISHED)) {
             exceptionType.setExceptionCode("NoSuchProcessResult");
             exceptionType.getExceptionText().add("Process with UUID: " + jobId + " has not completed or completed with error... use getStatus to check the current state before trying to get the result");
             exceptionReport.getException().add(exceptionType);
@@ -458,8 +460,8 @@ public class Wps2OperationsImpl implements Wps2Operations {
         StatusInfo statusInfo = new StatusInfo();
         statusInfo.setJobID(jobId.toString());
         statusInfo.setStatus(processJob.getState().name());
-        if (!processJob.getState().equals(ProcessExecutionListener.ProcessState.FAILED) &&
-                !processJob.getState().equals(ProcessExecutionListener.ProcessState.FINISHED)) {
+        if (!processJob.getState().equals(ProcessState.FAILED) &&
+                !processJob.getState().equals(ProcessState.FINISHED)) {
             XMLGregorianCalendar date = Wps2ServerUtils.getXMLGregorianCalendarWithDelay(processJob.getProcessPoolingTime());
             statusInfo.setNextPoll(date);
         }

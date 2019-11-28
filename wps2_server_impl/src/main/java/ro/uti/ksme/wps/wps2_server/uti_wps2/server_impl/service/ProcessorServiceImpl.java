@@ -18,16 +18,13 @@ import java.util.concurrent.locks.ReentrantLock;
  * @author Bogdan-Adrian Sincu
  * Class used to process async process execution requests
  */
-//@Singleton
-//@Startup
-//@ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
 @Service
 public class ProcessorServiceImpl implements ProcessorService {
 
     private final ExecutorService executorService;
     private final int threadPool;
-    private ProcessManager processManager;
     private final ReentrantLock lock = new ReentrantLock(true);
+    private ProcessManager processManager;
 
     public ProcessorServiceImpl() {
         threadPool = Wps2ServerProps.getWpsProcessesExecutorThreadPool();
@@ -48,7 +45,6 @@ public class ProcessorServiceImpl implements ProcessorService {
     }
 
     @Override
-//    @Lock(LockType.WRITE)
     public Future executeNewProcessWorker(ProcessJob job, ProcessIdentifier processIdentifier, Map<URI, Object> dataMap) {
         ProcessWorker worker = new ProcessWorker(job, processIdentifier, processManager, dataMap, this);
         if (ProcessWorkerMapInstance.INSTANCE.workerMap.size() >= threadPool) {
@@ -71,7 +67,6 @@ public class ProcessorServiceImpl implements ProcessorService {
 
 
     @Override
-//    @Lock(LockType.WRITE)
     public void onProcessWFinish() {
         for (Map.Entry<UUID, Map<String, Object>> entry : ProcessWorkerMapInstance.INSTANCE.workerMap.entrySet()) {
             if (((Future) entry.getValue().get("future")).isDone()) {

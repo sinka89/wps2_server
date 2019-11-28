@@ -1,10 +1,10 @@
 package ro.uti.ksme.wps.wps2_client;
 
-import ro.uti.ksme.wps.wps2.pojo.wps._2.ProcessOfferings;
-import ro.uti.ksme.wps.wps2.pojo.wps._2.StatusInfo;
-import ro.uti.ksme.wps.wps2.pojo.wps._2.WPSCapabilitiesType;
-
-import java.util.Optional;
+import ro.uti.ksme.wps.wps2_client.request.ExecuteProcessRequest;
+import ro.uti.ksme.wps.wps2_client.response.WPS2DescribeProcessResponse;
+import ro.uti.ksme.wps.wps2_client.response.WPS2ExecuteProcessResponse;
+import ro.uti.ksme.wps.wps2_client.response.WPS2GetCapabilitiesResponse;
+import ro.uti.ksme.wps.wps2_client.response.WPS2StatusInfoResponse;
 
 /**
  * Created by IntelliJ IDEA.
@@ -15,11 +15,17 @@ import java.util.Optional;
  */
 public interface WPS2Client {
 
-    Optional<WPSCapabilitiesType> getCapabilities();
+    WPS2GetCapabilitiesResponse getCapabilities();
 
-    Optional<ProcessOfferings> describeProcess(String identifier, String language);
+    WPS2DescribeProcessResponse describeProcess(String identifier, String language);
 
-    Optional<StatusInfo> getStatusInfoForProcess(String identifier);
+    WPS2StatusInfoResponse getStatusInfoForProcess(String identifier);
 
-    Optional<StatusInfo> dismissProcess(String identifier);
+    WPS2StatusInfoResponse dismissProcess(String identifier);
+
+    ExecuteProcessRequest createExecuteProcessRequest();
+
+    WPS2ExecuteProcessResponse executeProcess(ExecuteProcessRequest executeRequest);
+
+    WPS2ExecuteProcessResponse getProcessResult(String identifier);
 }

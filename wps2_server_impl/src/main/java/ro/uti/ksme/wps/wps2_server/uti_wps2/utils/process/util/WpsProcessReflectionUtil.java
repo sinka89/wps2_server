@@ -5,6 +5,7 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.process.Pr
 
 import java.util.Collection;
 import java.util.Set;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * @author Bogdan-Adrian Sincu
@@ -14,6 +15,7 @@ import java.util.Set;
 public class WpsProcessReflectionUtil {
 
     private static final String CLASS_PACKAGE_PREFIX = "ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.process";
+    private static final ReentrantLock lock = new ReentrantLock(true);
 
     public static Collection<Class<?>> getListOfProcessesClass() {
         Reflections reflections = new Reflections(CLASS_PACKAGE_PREFIX);
@@ -21,15 +23,20 @@ public class WpsProcessReflectionUtil {
     }
 
     public static Class<?> getProcessClassBasedOnIdentifier(String identifier) {
-        Reflections reflections = new Reflections(CLASS_PACKAGE_PREFIX);
-        Set<Class<?>> typesAnnotatedWith = reflections.getTypesAnnotatedWith(Process.class);
         Class toReturn = null;
-        for (Class c : typesAnnotatedWith) {
-            Process annotation = (Process) c.getAnnotation(Process.class);
-            if (annotation.descriptionType().identifier().equalsIgnoreCase(identifier)) {
-                toReturn = c;
-                break;
+        lock.lock();
+        try {
+            Reflections reflections = new Reflections(CLASS_PACKAGE_PREFIX);
+            Set<Class<?>> typesAnnotatedWith = reflections.getTypesAnnotatedWith(Process.class);
+            for (Class c : typesAnnotatedWith) {
+                Process annotation = (Process) c.getAnnotation(Process.class);
+                if (annotation.descriptionType().identifier().equalsIgnoreCase(identifier)) {
+                    toReturn = c;
+                    break;
+                }
             }
+        } finally {
+            lock.unlock();
         }
         return toReturn;
     }

@@ -41,10 +41,6 @@ public class WpsServerHost {
                 //create context
                 ApplicationContext applicationContext = new ClassPathXmlApplicationContext("spring_app_context.xml");
                 WpsPostHandler wpsPostHandler = applicationContext.getBean("wpsPostHandler", WpsPostHandler.class);
-//                Weld weld = new Weld();
-//                WeldContainer container = weld.initialize();
-//                WpsPostHandler wpsPostHandler = container.select(WpsPostHandler.class).get();
-
 
                 //create httpServer or httpsServer
                 InetSocketAddress inetSocketAddress = new InetSocketAddress(server_url, Integer.valueOf(server_port));
@@ -73,7 +69,6 @@ public class WpsServerHost {
                     httpsServer.start();
 
                 }
-//                container.shutdown();
                 if (LOGGER.isDebugEnabled()) {
                     exec = System.currentTimeMillis() - exec;
                     StringBuilder sb = new StringBuilder();

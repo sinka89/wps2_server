@@ -5,11 +5,13 @@
     <parent>
         <artifactId>wps2_impl</artifactId>
         <groupId>ro.uti</groupId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <version>${global.version}</version>
+    <version>1.0.0</version>
+    <name>WPS2 Commons</name>
 
+    <!--https://github.com/sinka89/wps2_server-->
     <artifactId>wps2_common</artifactId>
 
 

@@ -3,7 +3,7 @@ package ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import ro.uti.ksme.wps.WpsServer;
 import ro.uti.ksme.wps.wps2.pojo.wps._2.*;
 import ro.uti.ksme.wps.wps2.utils.JaxbContainer;
@@ -27,10 +27,7 @@ import java.util.Optional;
  * @author Bogdan-Adrian Sincu
  * Main Wps2 server class -> handles marshalling and unmarshalling requests from Handler
  */
-//@Singleton
-//@Startup
-//@ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
-@Component
+@Service
 public class Wps2ServerImpl implements WpsServer {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(Wps2ServerImpl.class);

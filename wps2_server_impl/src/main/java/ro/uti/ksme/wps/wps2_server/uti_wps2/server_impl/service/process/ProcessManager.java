@@ -20,9 +20,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-//@Startup
-//@Singleton
-//@ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
 @Component
 public class ProcessManager {
 
@@ -35,7 +32,6 @@ public class ProcessManager {
         this.parseController = parseController;
     }
 
-    //    @Lock(LockType.WRITE)
     public void createAndAddProcess(Class<?> cls) {
         Optional<ProcessOffering> clsProcess = parseController.parseProcess(cls);
         if (clsProcess.isPresent()) {
@@ -87,7 +83,6 @@ public class ProcessManager {
         return null;
     }
 
-    //    @Lock(LockType.WRITE)
     void executeProcess(UUID id, ProcessIdentifier processIdentifier, Map<URI, Object> dataMap, Map<String, Object> properties, ProgressMonitor progressMonitor) {
         //set the number of steps and then increment after each process in case it's necessary else don't set sub-process and use endOfProgress()
         ProgressVisitor progressVisitor = progressMonitor.subProcess(3);

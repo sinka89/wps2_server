@@ -9,6 +9,8 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.output.Lit
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.process.Process;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessImplementation;
 
+import java.util.Random;
+
 /**
  * @author Bogdan-Adrian Sincu
  * Example of process that accepts a literalData input and returns literlData
@@ -42,6 +44,14 @@ public class DemoLiteralDataProcess implements ProcessImplementation {
 
         if (inputField != null) {
             LOGGER.info("Received Data: " + inputField);
+            try {
+                Random r = new Random();
+                int sleepTime = r.nextInt(4000 + 1);
+                LOGGER.info("Sleeping for " + sleepTime);
+                Thread.sleep(sleepTime);
+            } catch (Exception e) {
+                LOGGER.error("ERROR sleeping....");
+            }
             LOGGER.info("Will Return the same data...");
             return inputField;
         } else {

@@ -47,11 +47,11 @@ public class DemoWPS2Process implements ProcessImplementation {
 
     @InputAnnotation
     @LiteralDataInput(inputAttr = @InputAttr(minOccurs = 0, maxOccurs = 1),
-    descriptionType = @DescriptionTypeAttr(
-            title = "This is an optional Input of primitive type",
-            identifier = "optionalInput"
-    ),
-    literalAttr = @LiteralDataAttr)
+            descriptionType = @DescriptionTypeAttr(
+                    title = "This is an optional Input of primitive type",
+                    identifier = "optionalInput"
+            ),
+            literalAttr = @LiteralDataAttr)
     private String testInput;
 
     @OutputAnnotation
@@ -74,7 +74,7 @@ public class DemoWPS2Process implements ProcessImplementation {
             LOGGER.info("Received the following Input of type BoundingBoxData from the request:\n" + this.boundingBoxInput.toString());
         }
         try {
-            Thread.sleep(1000);
+//            Thread.sleep(1000);
             if (this.boundingBoxInput != null) {
                 LOGGER.info("Unmarshalling the data based on the xml received...");
                 Unmarshaller unmarshaller = JaxbContainer.INSTANCE.jaxbContext.createUnmarshaller();
@@ -83,7 +83,7 @@ public class DemoWPS2Process implements ProcessImplementation {
                 if (unMarshaledObj instanceof JAXBElement && ((JAXBElement) unMarshaledObj).getValue() instanceof BoundingBoxData) {
                     BoundingBoxData bboxData = (BoundingBoxData) ((JAXBElement) unMarshaledObj).getValue();
                     LOGGER.info("Unmarshal of xml received was successful will process...");
-                    Thread.sleep(500);
+//                    Thread.sleep(500);
 
                     BoundingBoxType bboxType = bboxData.getBoundingBox().getValue();
                     StringBuilder logMsg = new StringBuilder("Received the following BBOX_DATA:\n");
@@ -97,7 +97,7 @@ public class DemoWPS2Process implements ProcessImplementation {
                         logMsg.append("\n").append("The optional Input was provided and has value = ").append(testInput);
                     }
                     LOGGER.info(logMsg.toString());
-                    Thread.sleep(500);
+//                    Thread.sleep(500);
                     LOGGER.info("Continuing processing to return dummy .tiff...");
 
                     return IOUtils.toByteArray(this.getClass().getResourceAsStream("/dummy_result.tiff"));

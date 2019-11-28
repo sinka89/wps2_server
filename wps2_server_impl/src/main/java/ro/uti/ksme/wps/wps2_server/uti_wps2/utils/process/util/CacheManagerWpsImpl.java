@@ -12,9 +12,6 @@ import java.net.URL;
  * @author Bogdan-Adrian Sincu created on 10/9/2019
  * Class that creates an instance of EhCache manager and Cache for ProcessJobs that contain the result of the process itself
  */
-//@Singleton
-//@Startup
-//@ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
 @Service
 public class CacheManagerWpsImpl {
     private static final Logger LOGGER = LoggerFactory.getLogger(CacheManagerWpsImpl.class);

@@ -19,7 +19,7 @@ import java.util.Base64;
  * Date: 11/25/2019
  * Time: 5:24 PM
  */
-public class HttpClientImpl implements HttpClient{
+public class HttpClientImpl implements HttpClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpClientImpl.class);
     private static final int DEFAULT_TIMEOUT = 30;
 

@@ -14,16 +14,12 @@ import javax.xml.bind.Marshaller;
 import java.io.StringWriter;
 import java.util.Optional;
 
-//@Singleton
-//@Startup
-//@ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
 @Service
 public class ErrorServiceImpl implements ErrorService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ErrorServiceImpl.class);
 
     @Override
-//    @Lock(LockType.READ)
     public Optional<String> generateErrorMsgXml(ExceptionDTO exDto) {
         ObjectFactory owsObjFac = new ObjectFactory();
         ExceptionType exceptionType = owsObjFac.createExceptionType();
@@ -44,7 +40,6 @@ public class ErrorServiceImpl implements ErrorService {
     }
 
     @Override
-//    @Lock(LockType.READ)
     public Optional<String> generateErrorMsgXml(String err) {
         return generateErrorMsgXml(new ExceptionDTO(500, err));
     }

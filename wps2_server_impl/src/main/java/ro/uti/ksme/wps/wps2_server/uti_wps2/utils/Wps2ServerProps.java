@@ -16,9 +16,6 @@ import java.util.Properties;
  * <p>
  * If the .properties file is not present or cannot be parsed for some reason the System will shutdown with code 2
  */
-//@Singleton
-//@Startup
-//@ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
 @Component
 public class Wps2ServerProps {
 

@@ -6,7 +6,7 @@
 
     <groupId>ro.uti</groupId>
     <artifactId>wps2_impl</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>Wps 2 Implementation S + C</name>
 
     <properties>
@@ -17,16 +17,20 @@
         <weld.version>3.0.2.Final</weld.version>
         <compile.optimize>true</compile.optimize>
         <spring.version>5.2.1.RELEASE</spring.version>
-        <global.version>1.0-SNAPSHOT</global.version>
+        <global.version>1.0.0</global.version>
         <reflections.version>0.9.10</reflections.version>
         <commons.io.version>2.6</commons.io.version>
+        <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
+        <maven.jar.plugin.version>3.2.0</maven.jar.plugin.version>
     </properties>
 
+    <!--https://github.com/sinka89/wps2_server-->
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin.version}</version>
                 <configuration>
                     <source>8</source>
                     <target>8</target>
@@ -68,23 +72,21 @@
             <artifactId>commons-io</artifactId>
             <version>${commons.io.version}</version>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>javax</groupId>-->
-            <!--<artifactId>javaee-api</artifactId>-->
-            <!--<version>${java.ee.api.verions}</version>-->
-        <!--</dependency>-->
-        <!--<dependency>-->
-            <!--<groupId>org.jboss.weld.se</groupId>-->
-            <!--<artifactId>weld-se-core</artifactId>-->
-            <!--<version>${weld.version}</version>-->
-        <!--</dependency>-->
-        <!-- https://mvnrepository.com/artifact/org.springframework/spring-context -->
-        <!--<dependency>-->
-            <!--<groupId>commons-configuration</groupId>-->
-            <!--<artifactId>commons-configuration</artifactId>-->
-            <!--<version>1.10</version>-->
-        <!--</dependency>-->
+        <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-jar-plugin -->
+        <dependency>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>${maven.jar.plugin.version}</version>
+        </dependency>
 
     </dependencies>
 
+    <inceptionYear>2019</inceptionYear>
+    <developers>
+        <developer>
+            <id>sincu.bogdan.adrian</id>
+            <name>Bogdan-Adrian Sincu</name>
+            <email>sinka.bogdan@gmail.com</email>
+        </developer>
+    </developers>
 </project>

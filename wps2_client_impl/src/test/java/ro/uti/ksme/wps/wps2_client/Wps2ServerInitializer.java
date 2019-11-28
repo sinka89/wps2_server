@@ -12,13 +12,13 @@ import java.io.File;
  * Date: 11/26/2019
  * Time: 4:29 PM
  */
-class Wps2ServerInitializer {
+public class Wps2ServerInitializer {
     private static final Logger LOGGER = LoggerFactory.getLogger(Wps2ServerInitializer.class);
 
-    private static final String WPS2_SERVER_IMPL_JAR = "wps2_server_impl-1.0-SNAPSHOT.jar";
+    private static final String WPS2_SERVER_IMPL_JAR = "wps2_server_impl-1.0.0.jar";
     private static final String WPS2_SERVER_MAIN_CLASS = "ro.uti.ksme.WpsServerHost";
 
-    static Process getProcess() {
+    public static Process getProcess() {
         Process result = null;
         try {
             File wpsServer = new File("../wps2_server_impl");

@@ -4,12 +4,11 @@ import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ro.uti.ksme.wps.wps2.pojo.wps._2.ProcessOfferings;
-import ro.uti.ksme.wps.wps2.pojo.wps._2.WPSCapabilitiesType;
-import ro.uti.ksme.wps.wps2_client.exception.Wps2ServerException;
+import ro.uti.ksme.wps.wps2_client.response.WPS2DescribeProcessResponse;
+import ro.uti.ksme.wps.wps2_client.response.WPS2GetCapabilitiesResponse;
+import ro.uti.ksme.wps.wps2_client.response.WPS2StatusInfoResponse;
 
 import java.net.URL;
-import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -27,6 +26,7 @@ public class Wps2ClientTest {
     @Rule
     public ExpectedException exception = ExpectedException.none();
 
+    @SuppressWarnings("Duplicates")
     @BeforeClass
     public static void init() {
         try {
@@ -35,11 +35,12 @@ public class Wps2ClientTest {
                 PROCESS.waitFor(2, TimeUnit.SECONDS);
                 if (!PROCESS.isAlive()) {
                     LOGGER.info("Port in use... probably another instance is opened... will continue.");
+                    PROCESS.destroy();
                 }
             } else {
                 LOGGER.info("Server init failed... will continue");
             }
-            WPS2CLIENT = new WPS2ClientImpl(new URL("http://localhost:9001/wps2_server"));
+            WPS2CLIENT = new WPS2ClientImpl(new URL(Wps2ClientExecutionHelper.getServerUrl()));
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }
@@ -54,21 +55,19 @@ public class Wps2ClientTest {
 
     @Test
     public void getCapabilitiesTest() {
-        Optional<WPSCapabilitiesType> capabilities = WPS2CLIENT.getCapabilities();
-        Assert.assertTrue(capabilities.isPresent());
+        WPS2GetCapabilitiesResponse capabilities = WPS2CLIENT.getCapabilities();
+        Assert.assertNotNull(capabilities);
+        Assert.assertNull(capabilities.getExceptionResponse());
+        Assert.assertNotNull(capabilities.getWpsCapabilitiesTypeResponse());
     }
 
     @Test
     public void describeProcessWithSpecificIdentifierTest() {
-        Optional<ProcessOfferings> processOfferings = WPS2CLIENT.describeProcess("demoProcessDownloadTiff", "");
-        Assert.assertTrue(processOfferings.isPresent());
-        Assert.assertTrue(processOfferings.get().getProcessOffering().size() > 0);
-    }
-
-    @Test(expected = Wps2ServerException.class)
-    public void describeProcessWithNonExistingIdentifierThrowsWps2ServerExceptionTest() {
-        WPS2CLIENT.describeProcess("nonExistingProcessName", null);
-        exception.expect(Wps2ServerException.class);
+        WPS2DescribeProcessResponse processOfferings = WPS2CLIENT.describeProcess("demoProcessDownloadTiff", "");
+        Assert.assertNotNull(processOfferings);
+        Assert.assertNotNull(processOfferings.getProcessOfferings());
+        Assert.assertNull(processOfferings.getExceptionReport());
+        Assert.assertTrue(processOfferings.getProcessOfferings().getProcessOffering().size() > 0);
     }
 
     @Test(expected = NullPointerException.class)
@@ -79,11 +78,10 @@ public class Wps2ClientTest {
 
     @Test
     public void describeProcessWps2ServerExceptionContainsExceptionReport() {
-        try {
-            WPS2CLIENT.describeProcess("nonExistingProcessName", null);
-        } catch (Wps2ServerException e) {
-            Assert.assertNotNull(e.getExceptionReport());
-        }
+        WPS2DescribeProcessResponse nonExistingProcessName = WPS2CLIENT.describeProcess("nonExistingProcessName", null);
+        Assert.assertNotNull(nonExistingProcessName);
+        Assert.assertNull(nonExistingProcessName.getProcessOfferings());
+        Assert.assertNotNull(nonExistingProcessName.getExceptionReport());
     }
 
     @Test(expected = NullPointerException.class)
@@ -92,13 +90,18 @@ public class Wps2ClientTest {
         exception.expect(NullPointerException.class);
     }
 
+    @Test(expected = NullPointerException.class)
+    public void getResultNoIdentifierProvided() {
+        WPS2CLIENT.getProcessResult(null);
+        exception.expect(NullPointerException.class);
+    }
+
     @Test
-    public void getStatusWps2ServerExceptionContainsExceptionReport() {
-        try {
-            WPS2CLIENT.getStatusInfoForProcess("nonExistingProcessUUID");
-        } catch (Wps2ServerException e) {
-            Assert.assertNotNull(e.getExceptionReport());
-        }
+    public void getStatusContainsExceptionReport() {
+        WPS2StatusInfoResponse nonExistingProcessUUID = WPS2CLIENT.getStatusInfoForProcess("nonExistingProcessUUID");
+        Assert.assertNotNull(nonExistingProcessUUID);
+        Assert.assertNull(nonExistingProcessUUID.getStatusInfo());
+        Assert.assertNotNull(nonExistingProcessUUID.getExceptionReport());
     }
 
     @Test(expected = NullPointerException.class)
@@ -108,11 +111,10 @@ public class Wps2ClientTest {
     }
 
     @Test
-    public void dismissProcessWps2ServerExceptionsContainsExceptionReport() {
-        try {
-            WPS2CLIENT.dismissProcess("nonExistingProcessUUID");
-        } catch (Wps2ServerException e) {
-            Assert.assertNotNull(e.getExceptionReport());
-        }
+    public void dismissProcessContainsExceptionReport() {
+        WPS2StatusInfoResponse nonExistingProcessUUID = WPS2CLIENT.dismissProcess("nonExistingProcessUUID");
+        Assert.assertNotNull(nonExistingProcessUUID);
+        Assert.assertNull(nonExistingProcessUUID.getStatusInfo());
+        Assert.assertNotNull(nonExistingProcessUUID.getExceptionReport());
     }
 }

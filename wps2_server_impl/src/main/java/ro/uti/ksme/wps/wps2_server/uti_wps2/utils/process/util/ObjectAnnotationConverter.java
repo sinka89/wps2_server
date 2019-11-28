@@ -14,7 +14,7 @@ import java.util.*;
 
 /**
  * @author Bogdan-Adrian Sincu
- *
+ * <p>
  * Class used to convert Process java classes to WPS2 Objects that can be marshalled with the provided info
  */
 public class ObjectAnnotationConverter {

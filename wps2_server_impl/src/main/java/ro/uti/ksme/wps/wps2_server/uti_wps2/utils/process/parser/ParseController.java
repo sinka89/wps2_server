@@ -23,9 +23,6 @@ import java.util.Optional;
  * @author Bogdan-Adrian Sincu
  * Main Parser that Generates ProcessIdentifier based on the java process classes
  */
-//@Startup
-//@Singleton
-//@ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
 @Component
 public class ParseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ParseController.class);

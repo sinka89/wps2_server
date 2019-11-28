@@ -13,9 +13,6 @@ import java.util.List;
 /**
  * @author Bogdan-Adrian Sincu created on 10/9/2019
  */
-//@Startup
-//@Singleton
-//@ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
 @Service
 public class ProcessValidatorServiceImpl implements ProcessValidatorService {
     @Override

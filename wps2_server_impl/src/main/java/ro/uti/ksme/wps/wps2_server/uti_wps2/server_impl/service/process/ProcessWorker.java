@@ -2,6 +2,7 @@ package ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.service.process;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ro.uti.ksme.wps.common.utils.enums.ProcessState;
 import ro.uti.ksme.wps.wps2.pojo.wps._2.ProcessDescriptionType;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.service.ProcessorService;
 
@@ -39,7 +40,7 @@ public class ProcessWorker implements CancellableRunnable, PropertyChangeListene
         String title = job.getProcess().getTitle().get(0).getValue();
         progressMonitor.setTaskName(title + " : Preprocessing");
         if (job != null) {
-            job.setProcessState(ProcessExecutionListener.ProcessState.RUNNING);
+            job.setProcessState(ProcessState.RUNNING);
         }
         ProcessDescriptionType process = processIdentifier.getProcessDescriptionType();
         try {
@@ -73,14 +74,14 @@ public class ProcessWorker implements CancellableRunnable, PropertyChangeListene
 
             if (job != null) {
                 job.appendLog(ProcessExecutionListener.LogType.INFO, "End of process.");
-                job.setProcessState(ProcessExecutionListener.ProcessState.FINISHED);
+                job.setProcessState(ProcessState.FINISHED);
             }
 
             progressMonitor.endOfProgress();
             processorService.onProcessWFinish();
         } catch (Exception e) {
             if (job != null) {
-                job.setProcessState(ProcessExecutionListener.ProcessState.FAILED);
+                job.setProcessState(ProcessState.FAILED);
                 LOGGER.error(e.getMessage(), e);
                 job.appendLog(ProcessExecutionListener.LogType.ERROR, e.getMessage());
             } else {
@@ -93,7 +94,7 @@ public class ProcessWorker implements CancellableRunnable, PropertyChangeListene
     @Override
     public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
         if (propertyChangeEvent.getPropertyName().equals(ProgressMonitor.PROP_CANCEL)) {
-            job.setProcessState(ProcessExecutionListener.ProcessState.CANCELED);
+            job.setProcessState(ProcessState.CANCELED);
             processManager.cancelProcess(job.getId());
         }
     }
