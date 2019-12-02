@@ -1,5 +1,6 @@
 package ro.uti.ksme.wps.wps2_client;
 
+import ro.uti.ksme.wps.wps2_client.connection_util.HttpClient;
 import ro.uti.ksme.wps.wps2_client.request.ExecuteProcessRequest;
 import ro.uti.ksme.wps.wps2_client.response.WPS2DescribeProcessResponse;
 import ro.uti.ksme.wps.wps2_client.response.WPS2ExecuteProcessResponse;
@@ -28,4 +29,6 @@ public interface WPS2Client {
     WPS2ExecuteProcessResponse executeProcess(ExecuteProcessRequest executeRequest);
 
     WPS2ExecuteProcessResponse getProcessResult(String identifier);
+
+    HttpClient getHttpClient();
 }

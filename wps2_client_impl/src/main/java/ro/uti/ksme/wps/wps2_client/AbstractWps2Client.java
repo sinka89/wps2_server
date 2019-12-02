@@ -37,4 +37,8 @@ public abstract class AbstractWps2Client implements WPS2Client {
         this.httpClient = httpClient;
     }
 
+    public HttpClient getHttpClient() {
+        return httpClient;
+    }
+
 }
