@@ -8,9 +8,7 @@ import ro.uti.ksme.wps.wps2_client.connection_util.HttpClientResponse;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,7 +30,7 @@ public class WPS2ExecuteProcessResponse extends GenericResponse {
         InputStream inputStream = null;
 
         rawContentType = response.getContentType();
-        try {
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
             if (rawContentType.matches(".*/xml.*")) {
                 Unmarshaller unmarshaller = JaxbContainer.INSTANCE.jaxbContext.createUnmarshaller();
                 inputStream = new BufferedInputStream(httpClientResponse.getResponseInputStream());
@@ -47,7 +45,13 @@ public class WPS2ExecuteProcessResponse extends GenericResponse {
             } else {
                 inputStream = httpClientResponse.getResponseInputStream();
             }
-            rawResponseStream = inputStream;
+            byte[] buffer = new byte[1024];
+            int len;
+            while ((len = inputStream.read(buffer)) > -1) {
+                outputStream.write(buffer, 0, len);
+            }
+            outputStream.flush();
+            rawResponseStream = new ByteArrayInputStream(outputStream.toByteArray());
             inputStream = null;
         } finally {
             if (inputStream != null) {

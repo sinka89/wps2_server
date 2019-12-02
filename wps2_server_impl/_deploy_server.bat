@@ -1,1 +1,1 @@
-java -Xmx512m -cp "./target/wps2_server_impl-1.0.jar;./target/lib/*" ro.uti.ksme.WpsServerHost
+java -Xmx512m -cp "./target/wps2_server_impl-1.0.0.jar;./target/lib/*" ro.uti.ksme.WpsServerHost
