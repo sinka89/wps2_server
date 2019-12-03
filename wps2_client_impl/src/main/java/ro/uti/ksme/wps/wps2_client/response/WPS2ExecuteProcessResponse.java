@@ -8,7 +8,11 @@ import ro.uti.ksme.wps.wps2_client.connection_util.HttpClientResponse;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
-import java.io.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by IntelliJ IDEA.
@@ -17,9 +21,9 @@ import java.io.*;
  * Date: 11/27/2019
  * Time: 1:33 PM
  */
-public class WPS2ExecuteProcessResponse extends GenericResponse {
+public class WPS2ExecuteProcessResponse extends GenericResponse implements PropertyChangeListener {
     private ExceptionReport exceptionReport;
-    private InputStream rawResponseStream;
+    private ProgressInputStream rawResponseStream;
     private String rawContentType;
     private Result executionResult;
     private StatusInfo executionStatusAsync;
@@ -27,13 +31,14 @@ public class WPS2ExecuteProcessResponse extends GenericResponse {
     public WPS2ExecuteProcessResponse(HttpClientResponse response) throws IOException, JAXBException {
         super(response);
 
-        InputStream inputStream = null;
+        ProgressInputStream inputStream = null;
 
         rawContentType = response.getContentType();
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+        try {
             if (rawContentType.matches(".*/xml.*")) {
                 Unmarshaller unmarshaller = JaxbContainer.INSTANCE.jaxbContext.createUnmarshaller();
-                inputStream = new BufferedInputStream(httpClientResponse.getResponseInputStream());
+                inputStream = new ProgressInputStream(new BufferedInputStream(httpClientResponse.getResponseInputStream()), httpClientResponse.getResponseInputStream().available());
+                inputStream.addPropertyChangeListener(this);
                 Object obj = unmarshaller.unmarshal(inputStream);
                 if (obj instanceof Result) {
                     executionResult = (Result) obj;
@@ -43,15 +48,10 @@ public class WPS2ExecuteProcessResponse extends GenericResponse {
                     exceptionReport = (ExceptionReport) obj;
                 }
             } else {
-                inputStream = httpClientResponse.getResponseInputStream();
+                inputStream = new ProgressInputStream(httpClientResponse.getResponseInputStream(), httpClientResponse.getResponseInputStream().available());
+                inputStream.addPropertyChangeListener(this);
             }
-            byte[] buffer = new byte[1024];
-            int len;
-            while ((len = inputStream.read(buffer)) > -1) {
-                outputStream.write(buffer, 0, len);
-            }
-            outputStream.flush();
-            rawResponseStream = new ByteArrayInputStream(outputStream.toByteArray());
+            rawResponseStream = inputStream;
             inputStream = null;
         } finally {
             if (inputStream != null) {
@@ -78,5 +78,12 @@ public class WPS2ExecuteProcessResponse extends GenericResponse {
 
     public StatusInfo getExecutionStatusAsync() {
         return executionStatusAsync;
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if (evt.getPropertyName().equals(ProgressInputStream.PROP_ALL_BYTES_READ)) {
+            super.dismiss();
+        }
     }
 }

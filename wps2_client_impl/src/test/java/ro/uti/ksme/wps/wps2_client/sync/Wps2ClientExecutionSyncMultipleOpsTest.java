@@ -75,7 +75,7 @@ public class Wps2ClientExecutionSyncMultipleOpsTest {
         ExecuteProcessRequest executeProcessRequest = WPS2CLIENT.createExecuteProcessRequest();
         int timesToExecute = 5;
         if (isServerActiveFromAnotherSource) {
-            timesToExecute = 100;
+            timesToExecute = 20;
         }
         for (int i = 0; i < timesToExecute; ++i) {
             evaluateResponseOfSyncExecuteMultipleTimes(WPS2CLIENT, executeProcessRequest, i);
@@ -86,7 +86,7 @@ public class Wps2ClientExecutionSyncMultipleOpsTest {
     public void executeProcessSyncMultipleTimesFromDifferentClient() {
         int timesToExecute = 5;
         if (isServerActiveFromAnotherSource) {
-            timesToExecute = 100;
+            timesToExecute = 20;
         }
         for (int i = 0; i < timesToExecute; ++i) {
             WPS2Client wps2Client = getNewWps2Client();

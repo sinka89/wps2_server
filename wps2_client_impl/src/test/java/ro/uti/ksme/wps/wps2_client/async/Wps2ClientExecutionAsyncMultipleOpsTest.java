@@ -82,7 +82,7 @@ public class Wps2ClientExecutionAsyncMultipleOpsTest {
         ExecuteProcessRequest executeProcessRequest = WPS2CLIENT.createExecuteProcessRequest();
         int timesToExecute = 10;
         if (isServerActiveFromAnotherSource) {
-            timesToExecute = 10000;
+            timesToExecute = 200;
         }
         List<Map<String, Integer>> listOfProcessesToCheckForCorrectResult = new ArrayList<>();
         for (int i = 0; i < timesToExecute; ++i) {
@@ -116,7 +116,7 @@ public class Wps2ClientExecutionAsyncMultipleOpsTest {
     public void executeProcessSyncMultipleTimesFromDifferentClient() {
         int timesToExecute = 10;
         if (isServerActiveFromAnotherSource) {
-            timesToExecute = 10000;
+            timesToExecute = 200;
         }
         List<Map<String, Integer>> listOfProcessesToCheckForCorrectResult = new ArrayList<>();
         for (int i = 0; i < timesToExecute; ++i) {
