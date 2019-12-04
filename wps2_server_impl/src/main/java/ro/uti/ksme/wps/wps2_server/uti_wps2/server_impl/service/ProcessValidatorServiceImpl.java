@@ -3,8 +3,11 @@ package ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.service;
 import org.springframework.stereotype.Service;
 import ro.uti.ksme.wps.wps2.pojo.wps._2.DataInputType;
 import ro.uti.ksme.wps.wps2.pojo.wps._2.InputDescriptionType;
+import ro.uti.ksme.wps.wps2.pojo.wps._2.OutputDefinitionType;
+import ro.uti.ksme.wps.wps2.pojo.wps._2.OutputDescriptionType;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.service.process.ProcessIdentifier;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.model.exceptions.ProcessInputValidationException;
+import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.model.exceptions.ProcessOutputValidationException;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -22,7 +25,7 @@ public class ProcessValidatorServiceImpl implements ProcessValidatorService {
         List<Integer> allreadyChecked = new ArrayList<>();
         boolean dataFound = false;
         for (InputDescriptionType pI : processInputs) {
-            for (int i = 0; i < input.size(); i++) {
+            for (int i = 0; i < input.size(); ++i) {
                 if (!allreadyChecked.isEmpty() && allreadyChecked.contains(i)) {
                     continue;
                 }
@@ -49,6 +52,29 @@ public class ProcessValidatorServiceImpl implements ProcessValidatorService {
             }
             dataFound = false;
             inputDataFound.clear();
+        }
+    }
+
+    /**
+     * @param processIdentifier the process from memory
+     * @param outputs           the outputs provided by the http request body
+     * @throws ProcessInputValidationException if the matching identifier from the request is not defined in the process
+     */
+    @Override
+    public void validateOutputForExecutionProcess(ProcessIdentifier processIdentifier, List<OutputDefinitionType> outputs) throws ProcessInputValidationException {
+        List<OutputDescriptionType> processOutputs = processIdentifier.getProcessDescriptionType().getOutput();
+        boolean dataFound = false;
+        //noinspection ForLoopReplaceableByForEach
+        for (int i = 0; i < outputs.size(); ++i) {
+            for (OutputDescriptionType pO : processOutputs) {
+                if (pO.isSetIdentifier() && outputs.get(i).isSetId() && pO.getIdentifier().isSetValue() && pO.getIdentifier().getValue().equals(outputs.get(i).getId())) {
+                    dataFound = true;
+                }
+            }
+            if (!dataFound) {
+                throw new ProcessOutputValidationException("The output identifier provided: " + outputs.get(i).getId() + " is not defined in the process");
+            }
+            dataFound = false;
         }
     }
 

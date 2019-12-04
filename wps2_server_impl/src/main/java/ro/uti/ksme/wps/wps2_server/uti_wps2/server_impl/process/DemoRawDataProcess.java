@@ -46,7 +46,7 @@ public class DemoRawDataProcess implements ProcessImplementation {
                     identifier = "rawDataOutput"
             ),
             rawDataAttr = @RawDataAttr(
-                    fileTypes = {".xml"}
+                    fileTypes = {".tiff"}
             ))
     @Override
     public RawData execute() {

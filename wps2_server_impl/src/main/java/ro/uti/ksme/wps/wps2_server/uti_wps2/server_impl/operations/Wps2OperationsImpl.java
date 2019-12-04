@@ -244,6 +244,7 @@ public class Wps2OperationsImpl implements Wps2Operations {
     public Object execute(ExecuteRequestType execute) {
         ProcessIdentifier processIdentifier = processManager.getProcessIdentifier(execute.getIdentifier());
         processValidatorService.validateInputForExecutionProcess(processIdentifier, execute.getInput());
+        processValidatorService.validateOutputForExecutionProcess(processIdentifier, execute.getOutput());
         Object toReturn = null;
         Map<URI, Object> dataMap = new HashMap<>();
         for (DataInputType input : execute.getInput()) {
