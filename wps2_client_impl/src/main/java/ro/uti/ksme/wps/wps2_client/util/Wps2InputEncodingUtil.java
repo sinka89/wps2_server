@@ -1,6 +1,7 @@
 package ro.uti.ksme.wps.wps2_client.util;
 
 import ro.uti.ksme.wps.common.utils.processing.Wps2EncoderToString;
+import ro.uti.ksme.wps.wps2.pojo.wps._2.Result;
 import ro.uti.ksme.wps.wps2.utils.JaxbContainer;
 
 import javax.xml.bind.JAXBContext;
@@ -20,14 +21,22 @@ import java.io.StringWriter;
 public class Wps2InputEncodingUtil {
 
     public static String encodeToString(JAXBElement element) throws JAXBException, IOException {
-        return encodeToString(element, JaxbContainer.INSTANCE.jaxbContext, (el, context) -> {
+        return encodeToString(element, JaxbContainer.INSTANCE.jaxbContext, getWps2EncoderToString(element));
+    }
+
+    public static String encodeToString(Result result) throws JAXBException, IOException {
+        return encodeToString(result, JaxbContainer.INSTANCE.jaxbContext, getWps2EncoderToString(result));
+    }
+
+    private static Wps2EncoderToString getWps2EncoderToString(Object object) {
+        return (el, context) -> {
             try (StringWriter sw = new StringWriter()) {
                 Marshaller marshaller = context.createMarshaller();
-                marshaller.marshal(element, sw);
+                marshaller.marshal(object, sw);
                 sw.flush();
                 return sw.toString();
             }
-        });
+        };
     }
 
     private static String encodeToString(JAXBElement element, JAXBContext context, Wps2EncoderToString fun) throws JAXBException, IOException {
@@ -36,5 +45,13 @@ public class Wps2InputEncodingUtil {
 
     public static String encodeToString(JAXBElement element, Wps2EncoderToString fun) throws JAXBException, IOException {
         return encodeToString(element, JaxbContainer.INSTANCE.jaxbContext, fun);
+    }
+
+    private static String encodeToString(Result result, JAXBContext context, Wps2EncoderToString fun) throws JAXBException, IOException {
+        return fun.encode(result, context);
+    }
+
+    public static String encodeToString(Result result, Wps2EncoderToString fun) throws JAXBException, IOException {
+        return encodeToString(result, JaxbContainer.INSTANCE.jaxbContext, fun);
     }
 }

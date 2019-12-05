@@ -1,7 +1,6 @@
 package ro.uti.ksme.wps.common.utils.processing;
 
 import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
 
@@ -15,5 +14,5 @@ import java.io.IOException;
 @FunctionalInterface
 public interface Wps2EncoderToString {
 
-    String encode(JAXBElement element, JAXBContext context) throws JAXBException, IOException;
+    String encode(Object element, JAXBContext context) throws JAXBException, IOException;
 }

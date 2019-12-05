@@ -204,10 +204,6 @@ public class WPS2ClientImpl extends AbstractWps2Client {
         } catch (JAXBException | IOException e) {
             LOGGER.error(e.getMessage(), e);
             throw new RuntimeException(e);
-        } finally {
-            if (post != null) {
-                post.dismiss();
-            }
         }
         return result;
     }
