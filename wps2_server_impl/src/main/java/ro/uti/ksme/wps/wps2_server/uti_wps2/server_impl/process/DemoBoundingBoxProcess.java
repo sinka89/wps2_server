@@ -10,6 +10,7 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.attributes
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.input.BoundingBoxInput;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.output.BoundingBoxOutput;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.process.Process;
+import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.exception.ProcessingException;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessImplementation;
 
 import javax.xml.bind.JAXBElement;
@@ -51,7 +52,7 @@ public class DemoBoundingBoxProcess implements ProcessImplementation {
             description = "The result must be of form ows2 BoundingBoxType so it will wrap itself inside a BoundingBoxData one layer up."
     ), boundingBoxAttr = @BoundingBoxAttr)
     @Override
-    public BoundingBoxType execute() {
+    public BoundingBoxType execute() throws ProcessingException {
         try {
             LOGGER.info("Received the following Input from the request: \n" + objectTestInputField1.toString());
             LOGGER.info("Trying to unmarshall data and process it...");
@@ -85,6 +86,7 @@ public class DemoBoundingBoxProcess implements ProcessImplementation {
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
+            throw new ProcessingException(e.initCause(e));
         }
 
         return null;

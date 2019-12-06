@@ -36,7 +36,7 @@ import java.util.Map;
 public abstract class ProcessExecutionHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProcessExecutionHelper.class);
 
-    public static <T> T createProcess(ProcessDescriptionType process, Class<T> clazz, Map<URI, Object> dataMap) {
+    public static <T extends ProcessImplementation> T createProcess(ProcessDescriptionType process, Class<T> clazz, Map<URI, Object> dataMap) {
         T t = null;
         try {
             t = clazz.newInstance();
@@ -182,6 +182,7 @@ public abstract class ProcessExecutionHelper {
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
+            throw new ProcessingException(e.initCause(e));
         }
     }
 

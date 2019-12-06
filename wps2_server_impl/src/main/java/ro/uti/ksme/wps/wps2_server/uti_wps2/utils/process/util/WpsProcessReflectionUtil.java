@@ -22,8 +22,8 @@ public class WpsProcessReflectionUtil {
         return reflections.getTypesAnnotatedWith(Process.class);
     }
 
-    public static Class<?> getProcessClassBasedOnIdentifier(String identifier) {
-        Class toReturn = null;
+    public static <T extends ProcessImplementation> Class<T> getProcessClassBasedOnIdentifier(String identifier) {
+        Class<T> toReturn = null;
         lock.lock();
         try {
             Reflections reflections = new Reflections(CLASS_PACKAGE_PREFIX);
@@ -31,6 +31,7 @@ public class WpsProcessReflectionUtil {
             for (Class c : typesAnnotatedWith) {
                 Process annotation = (Process) c.getAnnotation(Process.class);
                 if (annotation.descriptionType().identifier().equalsIgnoreCase(identifier)) {
+                    //noinspection unchecked
                     toReturn = c;
                     break;
                 }

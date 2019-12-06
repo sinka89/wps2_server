@@ -9,6 +9,7 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.attributes
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.input.RawDataInput;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.output.RawDataOutput;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.process.Process;
+import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.exception.ProcessingException;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.FormatFactory;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessImplementation;
 
@@ -49,7 +50,7 @@ public class DemoRawDataProcess implements ProcessImplementation {
                     fileTypes = {".tiff"}
             ))
     @Override
-    public RawData execute() {
+    public RawData execute() throws ProcessingException {
         try {
             Object toReturn = null;
             byte[] bytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/dummy_result.tiff"));
@@ -60,8 +61,8 @@ public class DemoRawDataProcess implements ProcessImplementation {
             return rawData;
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
+            throw new ProcessingException(e.initCause(e));
         }
-        return null;
     }
 
     public Object getRawDataField() {

@@ -12,6 +12,7 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.input.Boun
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.input.LiteralDataInput;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.output.RawDataOutput;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.process.Process;
+import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.exception.ProcessingException;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessImplementation;
 
 import javax.xml.bind.JAXBElement;
@@ -68,7 +69,7 @@ public class DemoWPS2Process implements ProcessImplementation {
             )
     )
     @Override
-    public byte[] execute() {
+    public byte[] execute() throws ProcessingException {
         LOGGER.info("The process was identified and called via reflection...");
         if (this.boundingBoxInput != null) {
             LOGGER.info("Received the following Input of type BoundingBoxData from the request:\n" + this.boundingBoxInput.toString());
@@ -99,13 +100,16 @@ public class DemoWPS2Process implements ProcessImplementation {
                     LOGGER.info(logMsg.toString());
 //                    Thread.sleep(500);
                     LOGGER.info("Continuing processing to return dummy .tiff...");
-
+//                    while (true) {
+//                        LOGGER.error("Infinite Loop");
+//                    }
                     return IOUtils.toByteArray(this.getClass().getResourceAsStream("/dummy_result.tiff"));
                 }
             }
             LOGGER.info("Returning processing result...");
         } catch (Exception e) {
             LOGGER.info(e.getMessage(), e);
+            throw new ProcessingException(e.initCause(e));
         }
 
         return null;

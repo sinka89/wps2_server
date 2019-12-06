@@ -81,7 +81,7 @@ public class Wps2ServerImpl implements WpsServer {
             } else if (objReceived instanceof GetResult) {
                 result = wps2Operations.getResult((GetResult) objReceived);
             }
-        } catch (JAXBException e) {
+        } catch (Exception e) {
             LOGGER.error("Unable to parse incoming xml. \nCause: " + e.getMessage(), e);
             StringWriter stringWriter = new StringWriter();
             Optional<String> s = errorService.generateErrorMsgXml(e.toString());

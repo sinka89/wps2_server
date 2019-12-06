@@ -88,7 +88,7 @@ public class ProcessManager {
         ProgressVisitor progressVisitor = progressMonitor.subProcess(3);
         progressVisitor.endStep();
         ProcessDescriptionType process = processIdentifier.getProcessDescriptionType();
-        Class<?> clazz = WpsProcessReflectionUtil.getProcessClassBasedOnIdentifier(process.getIdentifier().getValue());
+        Class<ProcessImplementation> clazz = WpsProcessReflectionUtil.getProcessClassBasedOnIdentifier(process.getIdentifier().getValue());
         progressVisitor.endStep();
         Object processObj = ProcessExecutionHelper.createProcess(process, clazz, dataMap);
         ProcessCloserMap.INSTANCE.closureMap.put(id, processObj);

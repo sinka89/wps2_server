@@ -241,7 +241,7 @@ public class Wps2OperationsImpl implements Wps2Operations {
     }
 
     @Override
-    public Object execute(ExecuteRequestType execute) {
+    public Object execute(ExecuteRequestType execute) throws Exception {
         ProcessIdentifier processIdentifier = processManager.getProcessIdentifier(execute.getIdentifier());
         processValidatorService.validateInputForExecutionProcess(processIdentifier, execute.getInput());
         processValidatorService.validateOutputForExecutionProcess(processIdentifier, execute.getOutput());

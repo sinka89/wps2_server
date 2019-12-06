@@ -8,7 +8,7 @@ public interface Wps2Operations {
 
     Object describeProcess(DescribeProcess describeProcess);
 
-    Object execute(ExecuteRequestType execute);
+    Object execute(ExecuteRequestType execute) throws Exception;
 
     Object getStatus(GetStatus getStatus);
 

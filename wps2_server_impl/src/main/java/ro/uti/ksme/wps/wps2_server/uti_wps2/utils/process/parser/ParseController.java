@@ -11,6 +11,7 @@ import ro.uti.ksme.wps.wps2.pojo.wps._2.ProcessOffering;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.model.exceptions.MalformedModelException;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.attributes.InputAnnotation;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.attributes.OutputAnnotation;
+import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessImplementation;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -61,9 +62,9 @@ public class ParseController {
         ProcessDescriptionType process = processOffering.getProcess();
         List<InputDescriptionType> inputList = new ArrayList<>();
         List<OutputDescriptionType> outputList = new ArrayList<>();
-        Object obj = null;
+        ProcessImplementation obj = null;
         try {
-            obj = cls.newInstance();
+            obj = (ProcessImplementation) cls.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
             LOGGER.error("Unable to create instance for class " + cls.getSimpleName());
         }

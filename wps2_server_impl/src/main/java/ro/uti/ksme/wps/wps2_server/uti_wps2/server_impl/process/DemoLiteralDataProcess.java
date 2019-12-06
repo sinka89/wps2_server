@@ -7,6 +7,7 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.attributes
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.input.LiteralDataInput;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.output.LiteralDataOutput;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.process.Process;
+import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.exception.ProcessingException;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessImplementation;
 
 import java.util.Random;
@@ -40,7 +41,7 @@ public class DemoLiteralDataProcess implements ProcessImplementation {
             identifier = "result"
     ))
     @Override
-    public String execute() {
+    public String execute() throws ProcessingException {
 
         if (inputField != null) {
             LOGGER.info("Received Data: " + inputField);
@@ -51,6 +52,7 @@ public class DemoLiteralDataProcess implements ProcessImplementation {
                 Thread.sleep(sleepTime);
             } catch (Exception e) {
                 LOGGER.error("ERROR sleeping....");
+                throw new ProcessingException(e.initCause(e));
             }
             LOGGER.info("Will Return the same data...");
             return inputField;
