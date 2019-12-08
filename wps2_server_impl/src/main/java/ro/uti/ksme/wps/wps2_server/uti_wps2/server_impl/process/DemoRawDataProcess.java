@@ -10,8 +10,8 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.input.RawD
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.output.RawDataOutput;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.process.Process;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.exception.ProcessingException;
+import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.AbstractProcessImplementation;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.FormatFactory;
-import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessImplementation;
 
 /**
  * @author Bogdan-Adrian Sincu created on 10/7/2019
@@ -25,7 +25,7 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessImplementa
                 title = "Raw Data Process Ex",
                 identifier = "rawDataEx"
         ))
-public class DemoRawDataProcess implements ProcessImplementation {
+public class DemoRawDataProcess extends AbstractProcessImplementation {
     private static final Logger LOGGER = LoggerFactory.getLogger(DemoRawDataProcess.class);
 
     @InputAnnotation

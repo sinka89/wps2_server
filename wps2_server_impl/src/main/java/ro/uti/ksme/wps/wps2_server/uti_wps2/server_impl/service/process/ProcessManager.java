@@ -90,7 +90,7 @@ public class ProcessManager {
         ProcessDescriptionType process = processIdentifier.getProcessDescriptionType();
         Class<ProcessImplementation> clazz = WpsProcessReflectionUtil.getProcessClassBasedOnIdentifier(process.getIdentifier().getValue());
         progressVisitor.endStep();
-        Object processObj = ProcessExecutionHelper.createProcess(process, clazz, dataMap);
+        ProcessImplementation processObj = ProcessExecutionHelper.createProcess(process, clazz, dataMap);
         ProcessCloserMap.INSTANCE.closureMap.put(id, processObj);
         ProcessExecutionHelper.executeAndGetResult(process, processObj, dataMap);
 
@@ -101,12 +101,13 @@ public class ProcessManager {
         if (ProcessCloserMap.INSTANCE.closureMap.containsKey(id)) {
             ProcessImplementation o = (ProcessImplementation) ProcessCloserMap.INSTANCE.closureMap.get(id);
             try {
-                Class<?>[] interfaces = o.getClass().getInterfaces();
-                for (Class<?> i : interfaces) {
-                    if (i.isAssignableFrom(ProcessImplementation.class)) {
-                        i.getMethod("closeAdditionalResources").invoke(o);
-                    }
-                }
+//                Class<?>[] interfaces = o.getClass().getInterfaces();
+//                for (Class<?> i : interfaces) {
+//                    if (i.isAssignableFrom(ProcessImplementation.class)) {
+//                        i.getMethod("closeAdditionalResources").invoke(o);
+//                    }
+//                }
+                o.closeAdditionalResources();
             } catch (Exception e) {
                 LOGGER.error(e.getMessage(), e);
             } finally {

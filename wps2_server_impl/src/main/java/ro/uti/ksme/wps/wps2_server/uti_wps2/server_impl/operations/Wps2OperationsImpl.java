@@ -10,9 +10,9 @@ import ro.uti.ksme.wps.common.utils.enums.ProcessState;
 import ro.uti.ksme.wps.common.utils.enums.ResponseType;
 import ro.uti.ksme.wps.wps2.custom_pojo_types.RawData;
 import ro.uti.ksme.wps.wps2.pojo.ows._2.*;
-import ro.uti.ksme.wps.wps2.pojo.wps._2.*;
 import ro.uti.ksme.wps.wps2.pojo.wps._2.GetCapabilitiesType;
 import ro.uti.ksme.wps.wps2.pojo.wps._2.ReferenceType;
+import ro.uti.ksme.wps.wps2.pojo.wps._2.*;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.service.ProcessValidatorService;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.service.ProcessorService;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.service.ProcessorServiceSync;
@@ -360,6 +360,7 @@ public class Wps2OperationsImpl implements Wps2Operations {
             for (OutputDescriptionType o : job.getProcess().getOutput()) {
                 if (o.getIdentifier().getValue().equals(entry.getKey().toString())) {
                     isOutput = true;
+                    break;
                 }
             }
             if (isOutput && pi.getProcessOffering().getOutputTransmission().contains(DataTransmissionModeType.VALUE)) {

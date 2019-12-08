@@ -12,7 +12,7 @@ public interface ProcessorService {
 
     void cancelProgress(UUID jobId);
 
-    Future executeNewProcessWorker(ProcessJob job, ProcessIdentifier processIdentifier, Map<URI, Object> dataMap);
+    Future<?> executeNewProcessWorker(ProcessJob job, ProcessIdentifier processIdentifier, Map<URI, Object> dataMap);
 
     void onProcessWFinish();
 }

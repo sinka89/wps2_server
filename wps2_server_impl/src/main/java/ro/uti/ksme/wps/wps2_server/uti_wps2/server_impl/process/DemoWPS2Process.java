@@ -1,6 +1,6 @@
 package ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.process;
 
-import org.apache.commons.io.IOUtils;
+import org.apache.commons.compress.utils.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ro.uti.ksme.wps.common.utils.enums.JobControlOps;
@@ -13,7 +13,7 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.input.Lite
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.output.RawDataOutput;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.process.Process;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.exception.ProcessingException;
-import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessImplementation;
+import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.AbstractProcessImplementation;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
@@ -33,7 +33,7 @@ import java.io.StringReader;
                 title = "This is a demo process for demonstrating WPS2 server execution that returns a static local file .tiff",
                 identifier = "demoProcessDownloadTiff"
         ))
-public class DemoWPS2Process implements ProcessImplementation {
+public class DemoWPS2Process extends AbstractProcessImplementation {
     private static final Logger LOGGER = LoggerFactory.getLogger(DemoWPS2Process.class);
 
     @InputAnnotation
@@ -102,6 +102,7 @@ public class DemoWPS2Process implements ProcessImplementation {
                     LOGGER.info("Continuing processing to return dummy .tiff...");
 //                    while (true) {
 //                        LOGGER.error("Infinite Loop");
+//                        Thread.sleep(0, 1);
 //                    }
                     return IOUtils.toByteArray(this.getClass().getResourceAsStream("/dummy_result.tiff"));
                 }

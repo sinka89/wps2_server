@@ -1,13 +1,5 @@
 package ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Created by IntelliJ IDEA.
  *
@@ -21,26 +13,7 @@ import java.util.List;
  * that on dismiss the server will try to force close no matter the state of the process or result.
  */
 public interface ProcessImplementation {
-    Logger LOGGER = LoggerFactory.getLogger(ProcessImplementation.class);
-
-    List<Object> listOfCancelableResources = new ArrayList<>();
-
-    static void closeAdditionalResources() {
-        if (!listOfCancelableResources.isEmpty()) {
-            for (Object o : listOfCancelableResources) {
-                if (o instanceof InputStream) {
-                    try {
-                        ((InputStream) o).close();
-                    } catch (Exception e) {
-                        LOGGER.error(e.getMessage(), e);
-                    }
-                }
-                if (o instanceof HttpURLConnection) {
-                    ((HttpURLConnection) o).disconnect();
-                }
-            }
-        }
-    }
-
     Object execute();
+
+    void closeAdditionalResources();
 }

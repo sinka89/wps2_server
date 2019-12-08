@@ -11,7 +11,7 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.input.Boun
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.output.BoundingBoxOutput;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.process.Process;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.exception.ProcessingException;
-import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessImplementation;
+import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.AbstractProcessImplementation;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
@@ -32,7 +32,7 @@ import java.util.Arrays;
         version = "0.0.1",
         jobControl = {JobControlOps.ASYNC, JobControlOps.SYNC}
 ))
-public class DemoBoundingBoxProcess implements ProcessImplementation {
+public class DemoBoundingBoxProcess extends AbstractProcessImplementation {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DemoBoundingBoxProcess.class);
 

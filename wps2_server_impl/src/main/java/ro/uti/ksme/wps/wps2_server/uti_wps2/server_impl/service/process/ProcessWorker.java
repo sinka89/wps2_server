@@ -16,13 +16,13 @@ public class ProcessWorker implements CancellableRunnable, PropertyChangeListene
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ProcessWorker.class);
 
-    private ProcessJob job;
-    private ProcessIdentifier processIdentifier;
-    private ProcessManager processManager;
-    private Map<URI, Object> dataMap;
+    private final ProcessJob job;
+    private final ProcessIdentifier processIdentifier;
+    private final ProcessManager processManager;
+    private final Map<URI, Object> dataMap;
 
-    private ProgressMonitor progressMonitor;
-    private ProcessorService processorService;
+    private final ProgressMonitor progressMonitor;
+    private final ProcessorService processorService;
 
     public ProcessWorker(ProcessJob job, ProcessIdentifier processIdentifier, ProcessManager processManager, Map<URI, Object> dataMap, ProcessorService processorService) {
         this.job = job;
@@ -39,23 +39,16 @@ public class ProcessWorker implements CancellableRunnable, PropertyChangeListene
     public void run() {
         String title = job.getProcess().getTitle().get(0).getValue();
         progressMonitor.setTaskName(title + " : Preprocessing");
-        if (job != null) {
-            job.setProcessState(ProcessState.RUNNING);
-        }
+        job.setProcessState(ProcessState.RUNNING);
         ProcessDescriptionType process = processIdentifier.getProcessDescriptionType();
         try {
 
-            if (job != null) {
-                job.appendLog(ProcessExecutionListener.LogType.INFO, "Starting process...");
-            }
+            job.appendLog(ProcessExecutionListener.LogType.INFO, "Starting process...");
 
-            if (job != null) {
-                job.appendLog(ProcessExecutionListener.LogType.INFO, "Pre-Processing...");
-            }
+            job.appendLog(ProcessExecutionListener.LogType.INFO, "Pre-Processing...");
 
-            if (job != null) {
-                job.appendLog(ProcessExecutionListener.LogType.INFO, "Executing process...");
-            }
+            job.appendLog(ProcessExecutionListener.LogType.INFO, "Executing process...");
+
             progressMonitor.setTaskName(title + " : Execution");
             processManager.executeProcess(job.getId(), processIdentifier, dataMap, processIdentifier.getProperties(), progressMonitor);
             if (progressMonitor.isCanceled()) {
@@ -63,30 +56,22 @@ public class ProcessWorker implements CancellableRunnable, PropertyChangeListene
             }
 
             progressMonitor.setTaskName(title + " : PostProcessing");
-            if (job != null) {
-                job.appendLog(ProcessExecutionListener.LogType.INFO, "Post-Processing.");
-            }
+            job.appendLog(ProcessExecutionListener.LogType.INFO, "Post-Processing.");
 
             if (progressMonitor.isCanceled()) {
                 return;
             }
 
 
-            if (job != null) {
-                job.appendLog(ProcessExecutionListener.LogType.INFO, "End of process.");
-                job.setProcessState(ProcessState.FINISHED);
-            }
+            job.appendLog(ProcessExecutionListener.LogType.INFO, "End of process.");
+            job.setProcessState(ProcessState.FINISHED);
 
             progressMonitor.endOfProgress();
             processorService.onProcessWFinish();
         } catch (Exception e) {
-            if (job != null) {
-                job.setProcessState(ProcessState.FAILED);
-                LOGGER.error(e.getMessage(), e);
-                job.appendLog(ProcessExecutionListener.LogType.ERROR, e.getMessage());
-            } else {
-                LOGGER.error("Error on executing the wps process: " + process.getTitle() + " with msg:\nCause: " + e.getMessage(), e);
-            }
+            job.setProcessState(ProcessState.FAILED);
+            LOGGER.error(e.getMessage(), e);
+            job.appendLog(ProcessExecutionListener.LogType.ERROR, e.getMessage());
             processorService.onProcessWFinish();
         }
     }

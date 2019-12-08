@@ -39,18 +39,18 @@ public class ProcessorServiceImpl implements ProcessorService {
     @Override
     public void cancelProgress(UUID jobId) {
         ((CancellableRunnable) ProcessWorkerMapInstance.INSTANCE.workerMap.get(jobId).get("runnable")).cancel();
-        ((Future) ProcessWorkerMapInstance.INSTANCE.workerMap.get(jobId).get("future")).cancel(true);
-        ProcessWorkerMapInstance.INSTANCE.workerMap.remove(jobId);
         processManager.cancelProcess(jobId);
+        ((Future<?>) ProcessWorkerMapInstance.INSTANCE.workerMap.get(jobId).get("future")).cancel(true);
+        ProcessWorkerMapInstance.INSTANCE.workerMap.remove(jobId);
     }
 
     @Override
-    public Future executeNewProcessWorker(ProcessJob job, ProcessIdentifier processIdentifier, Map<URI, Object> dataMap) {
+    public Future<?> executeNewProcessWorker(ProcessJob job, ProcessIdentifier processIdentifier, Map<URI, Object> dataMap) {
         ProcessWorker worker = new ProcessWorker(job, processIdentifier, processManager, dataMap, this);
         if (ProcessWorkerMapInstance.INSTANCE.workerMap.size() >= threadPool) {
             ProcessWorkerFifoInstance.INSTANCE.workerFifo.add(worker);
         } else {
-            Future future = executorService.submit(worker);
+            Future<?> future = executorService.submit(worker);
             lock.lock();
             try {
                 Map<String, Object> m = new HashMap<>();
@@ -69,7 +69,7 @@ public class ProcessorServiceImpl implements ProcessorService {
     @Override
     public void onProcessWFinish() {
         for (Map.Entry<UUID, Map<String, Object>> entry : ProcessWorkerMapInstance.INSTANCE.workerMap.entrySet()) {
-            if (((Future) entry.getValue().get("future")).isDone()) {
+            if (((Future<?>) entry.getValue().get("future")).isDone()) {
                 ProcessWorkerMapInstance.INSTANCE.workerMap.remove(entry.getKey());
                 ProcessCloserMap.INSTANCE.closureMap.remove(entry.getKey());
             }

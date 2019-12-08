@@ -8,7 +8,7 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.input.Lite
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.output.LiteralDataOutput;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.process.Process;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.exception.ProcessingException;
-import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessImplementation;
+import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.AbstractProcessImplementation;
 
 import java.net.URL;
 
@@ -27,7 +27,7 @@ import java.net.URL;
                 title = "This process executes and returns a reference to a location",
                 identifier = "processExecutionRef"
         ))
-public class DemoRawDataProcessWithRef implements ProcessImplementation {
+public class DemoRawDataProcessWithRef extends AbstractProcessImplementation {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(DemoRawDataProcessWithRef.class);
 
