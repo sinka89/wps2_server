@@ -46,7 +46,7 @@ public class WpsServerHost {
                 InetSocketAddress inetSocketAddress = new InetSocketAddress(server_url, Integer.valueOf(server_port));
                 if (!isHttps) {
                     HttpServer httpServer = HttpServer.create(inetSocketAddress, 0);
-                    httpServer.createContext("/wps", wpsPostHandler);
+                    httpServer.createContext("/", wpsPostHandler);
                     ExecutorService pool = Executors.newFixedThreadPool(Wps2ServerProps.getHttpServerExecutorThreadPool());
                     httpServer.setExecutor(pool);
                     httpServer.start();
@@ -63,7 +63,7 @@ public class WpsServerHost {
                     tmf.init(ks);
                     sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
                     httpsServer.setHttpsConfigurator(getHttpsConfig(sslContext));
-                    httpsServer.createContext("/wps", wpsPostHandler);
+                    httpsServer.createContext("/", wpsPostHandler);
                     ExecutorService pool = Executors.newFixedThreadPool(Wps2ServerProps.getHttpServerExecutorThreadPool());
                     httpsServer.setExecutor(pool);
                     httpsServer.start();

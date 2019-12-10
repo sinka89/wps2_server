@@ -4,5 +4,5 @@ import java.io.InputStream;
 
 public interface WpsServer {
 
-    Object callOperation(InputStream xml);
+    Object callOperation(InputStream xml, String path, String requestMethod);
 }

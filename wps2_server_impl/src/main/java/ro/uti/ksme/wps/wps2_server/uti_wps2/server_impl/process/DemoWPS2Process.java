@@ -30,7 +30,7 @@ import java.io.StringReader;
 ),
         descriptionType = @DescriptionTypeAttr(
                 keywords = {"ProcessKeyWord"},
-                title = "This is a demo process for demonstrating WPS2 server execution that returns a static local file .tiff",
+                title = "This is a demo process for demonstrating WPS2 server execution that returns a file in this case a .tiff",
                 identifier = "demoProcessDownloadTiff"
         ))
 public class DemoWPS2Process extends AbstractProcessImplementation {

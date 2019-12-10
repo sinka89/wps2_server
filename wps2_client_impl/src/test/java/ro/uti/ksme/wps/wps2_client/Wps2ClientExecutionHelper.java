@@ -65,7 +65,7 @@ public class Wps2ClientExecutionHelper {
         if (serverUrl != null) {
             return serverUrl;
         }
-        String staticUrl = "http://localhost:9001/wps2_server";
+        String staticUrl = "http://localhost:9001/wps";
         try {
             Properties testProps = new Properties();
             URL url = Wps2ClientExecutionHelper.class.getClassLoader().getResource("wps2_server.properties");

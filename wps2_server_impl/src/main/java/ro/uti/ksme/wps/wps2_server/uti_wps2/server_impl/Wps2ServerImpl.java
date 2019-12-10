@@ -10,6 +10,8 @@ import ro.uti.ksme.wps.wps2.utils.JaxbContainer;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.operations.Wps2Operations;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.service.ErrorService;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.service.process.ProcessManager;
+import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.Wps2ServerProps;
+import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.AbstractHttpRequestValidator;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.WpsProcessReflectionUtil;
 
 import javax.annotation.PostConstruct;
@@ -35,6 +37,7 @@ public class Wps2ServerImpl implements WpsServer {
     private ErrorService errorService;
     private Wps2Operations wps2Operations;
     private ProcessManager processManager;
+    private Wps2ServerProps wps2ServerProps;
 
     @Autowired
     public void setErrorService(ErrorService errorService) {
@@ -51,9 +54,13 @@ public class Wps2ServerImpl implements WpsServer {
         this.processManager = processManager;
     }
 
+    @Autowired
+    public void setWps2ServerProps(Wps2ServerProps wps2ServerProps) {
+        this.wps2ServerProps = wps2ServerProps;
+    }
+
     @Override
-//    @Lock(LockType.WRITE)
-    public Object callOperation(InputStream xml) {
+    public Object callOperation(InputStream xml, String path, String requestMethod) {
         Object result = null;
         ObjectFactory factoryWps2 = new ObjectFactory();
         Object objReceived;
@@ -64,6 +71,7 @@ public class Wps2ServerImpl implements WpsServer {
                 objReceived = ((JAXBElement) objReceived).getValue();
             }
             if (objReceived instanceof GetCapabilitiesType) {
+                AbstractHttpRequestValidator.validateRequest(path, requestMethod, wps2ServerProps.OPERATIONS_METADATA_PROPS.GET_CAPABILITIES_OPERATION);
                 Object resp = wps2Operations.getCapabilities((GetCapabilitiesType) objReceived);
                 if (resp instanceof WPSCapabilitiesType) {
                     result = factoryWps2.createCapabilities((WPSCapabilitiesType) resp);
@@ -71,14 +79,19 @@ public class Wps2ServerImpl implements WpsServer {
                     result = resp;
                 }
             } else if (objReceived instanceof DescribeProcess) {
+                AbstractHttpRequestValidator.validateRequest(path, requestMethod, wps2ServerProps.OPERATIONS_METADATA_PROPS.DESCRIBE_PROCESS_OPERATION);
                 result = wps2Operations.describeProcess((DescribeProcess) objReceived);
             } else if (objReceived instanceof ExecuteRequestType) {
+                AbstractHttpRequestValidator.validateRequest(path, requestMethod, wps2ServerProps.OPERATIONS_METADATA_PROPS.EXECUTE_OPERATION);
                 result = wps2Operations.execute((ExecuteRequestType) objReceived);
             } else if (objReceived instanceof GetStatus) {
+                AbstractHttpRequestValidator.validateRequest(path, requestMethod, wps2ServerProps.OPERATIONS_METADATA_PROPS.GET_STATUS_OPERATION);
                 result = wps2Operations.getStatus((GetStatus) objReceived);
             } else if (objReceived instanceof Dismiss) {
+                AbstractHttpRequestValidator.validateRequest(path, requestMethod, wps2ServerProps.OPERATIONS_METADATA_PROPS.DISMISS_OPERATION);
                 result = wps2Operations.dismiss((Dismiss) objReceived);
             } else if (objReceived instanceof GetResult) {
+                AbstractHttpRequestValidator.validateRequest(path, requestMethod, wps2ServerProps.OPERATIONS_METADATA_PROPS.GET_RESULT_OPERATION);
                 result = wps2Operations.getResult((GetResult) objReceived);
             }
         } catch (Exception e) {

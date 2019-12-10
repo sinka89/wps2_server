@@ -44,7 +44,7 @@ public class OperationsTest {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         marshaller.marshal(obj, out);
         InputStream in = new DataInputStream(new ByteArrayInputStream(out.toByteArray()));
-        Object result = wpsServer.callOperation(in);
+        Object result = wpsServer.callOperation(in, "/wps", "POST");
         if (result instanceof StringWriter) {
             InputStream resultXml = new ByteArrayInputStream(result.toString().getBytes());
             Object resultObj = unmarshaller.unmarshal(resultXml);

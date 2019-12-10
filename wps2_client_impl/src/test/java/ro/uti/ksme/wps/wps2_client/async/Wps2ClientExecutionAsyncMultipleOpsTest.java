@@ -63,7 +63,7 @@ public class Wps2ClientExecutionAsyncMultipleOpsTest {
 
     private WPS2Client getNewWps2Client() {
         try {
-            return new WPS2ClientImpl(new URL("http://localhost:9001/wps2_server"));
+            return new WPS2ClientImpl(new URL(Wps2ClientExecutionHelper.getServerUrl()));
         } catch (MalformedURLException e) {
             LOGGER.error(e.getMessage(), e);
         }

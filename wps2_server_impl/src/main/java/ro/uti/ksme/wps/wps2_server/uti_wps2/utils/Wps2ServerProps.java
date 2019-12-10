@@ -288,6 +288,17 @@ public class Wps2ServerProps {
                 DISMISS_OPERATION = null;
             }
         }
+
+        public Operation[] getAllOperationsDetails() {
+            return new Operation[]{
+                    this.GET_CAPABILITIES_OPERATION,
+                    this.DESCRIBE_PROCESS_OPERATION,
+                    this.EXECUTE_OPERATION,
+                    this.GET_STATUS_OPERATION,
+                    this.GET_RESULT_OPERATION,
+                    this.DISMISS_OPERATION
+            };
+        }
     }
 
     public class CustomProps {
