@@ -2,6 +2,7 @@ package ro.uti.ksme.wps.wps2_client.connection_util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ro.uti.ksme.wps.wps2_client.exception.Wps2ServerException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -79,6 +80,9 @@ public class HttpClientImpl implements HttpClient {
         } finally {
             os.flush();
             os.close();
+        }
+        if (((HttpURLConnection) connection).getResponseCode() == 401) {
+            throw new Wps2ServerException("Response code 401, Unauthorized");
         }
         return new HttpClientResponseImpl(connection);
     }

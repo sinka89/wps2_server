@@ -23,6 +23,8 @@ import java.util.Random;
 public class Wps2ClientExecutionHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(Wps2ClientExecutionHelper.class);
     private static String serverUrl = null;
+    public static String user = null;
+    public static String password = null;
 
     public static ExecuteProcessRequest executeDemoProcessDownloadTiff(ExecuteProcessRequest executeProcessRequest) {
         executeProcessRequest.setIdentifier("demoProcessDownloadTiff");
@@ -75,6 +77,8 @@ public class Wps2ClientExecutionHelper {
             } else {
                 testProps.load(new InputStreamReader(url.openStream()));
                 String fromProps = testProps.getProperty("wps2_server_url_to_use_in_testing");
+                user = testProps.getProperty("wps2_server_auth_user");
+                password = testProps.getProperty("wps2_server_auth_password");
                 if (fromProps != null && fromProps.trim().length() > 0) {
                     serverUrl = fromProps;
                 } else {

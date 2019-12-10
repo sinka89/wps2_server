@@ -4,10 +4,12 @@ import org.junit.*;
 import org.junit.rules.ExpectedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ro.uti.ksme.wps.wps2_client.exception.Wps2ServerException;
 import ro.uti.ksme.wps.wps2_client.response.WPS2DescribeProcessResponse;
 import ro.uti.ksme.wps.wps2_client.response.WPS2GetCapabilitiesResponse;
 import ro.uti.ksme.wps.wps2_client.response.WPS2StatusInfoResponse;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
@@ -41,6 +43,11 @@ public class Wps2ClientTest {
                 LOGGER.info("Server init failed... will continue");
             }
             WPS2CLIENT = new WPS2ClientImpl(new URL(Wps2ClientExecutionHelper.getServerUrl()));
+            if (Wps2ClientExecutionHelper.user != null && Wps2ClientExecutionHelper.password != null) {
+                WPS2CLIENT.getHttpClient().setUser(Wps2ClientExecutionHelper.user);
+                WPS2CLIENT.getHttpClient().setPassword(Wps2ClientExecutionHelper.password);
+            }
+
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }
@@ -59,6 +66,26 @@ public class Wps2ClientTest {
         Assert.assertNotNull(capabilities);
         Assert.assertNull(capabilities.getExceptionResponse());
         Assert.assertNotNull(capabilities.getWpsCapabilitiesTypeResponse());
+    }
+
+    @Test(expected = Wps2ServerException.class)
+    public void getCapabilitiesWithNoAuthMustFail() throws MalformedURLException {
+        WPS2Client wps2Client = new WPS2ClientImpl(new URL(Wps2ClientExecutionHelper.getServerUrl()));
+        WPS2GetCapabilitiesResponse capabilities = wps2Client.getCapabilities();
+        Assert.assertNull(capabilities.getExceptionResponse());
+        Assert.assertNull(capabilities.getWpsCapabilitiesTypeResponse());
+    }
+
+    @Test
+    public void getCapabilitiesWithAuthMustSucceed() throws MalformedURLException {
+        WPS2Client wps2Client = new WPS2ClientImpl(new URL(Wps2ClientExecutionHelper.getServerUrl()));
+        wps2Client.getHttpClient().setUser(Wps2ClientExecutionHelper.user);
+        wps2Client.getHttpClient().setPassword(Wps2ClientExecutionHelper.password);
+        WPS2GetCapabilitiesResponse capabilities = wps2Client.getCapabilities();
+        Assert.assertNotNull(capabilities);
+        Assert.assertNull(capabilities.getExceptionResponse());
+        Assert.assertNotNull(capabilities.getWpsCapabilitiesTypeResponse());
+
     }
 
     @Test

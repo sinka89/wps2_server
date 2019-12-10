@@ -49,6 +49,10 @@ public class Wps2ClientExecutionSyncMultipleOpsTest {
                 LOGGER.info("Server init failed... will continue");
             }
             WPS2CLIENT = new WPS2ClientImpl(new URL(Wps2ClientExecutionHelper.getServerUrl()));
+            if (Wps2ClientExecutionHelper.user != null && Wps2ClientExecutionHelper.password != null) {
+                WPS2CLIENT.getHttpClient().setUser(Wps2ClientExecutionHelper.user);
+                WPS2CLIENT.getHttpClient().setPassword(Wps2ClientExecutionHelper.password);
+            }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }
@@ -56,7 +60,12 @@ public class Wps2ClientExecutionSyncMultipleOpsTest {
 
     private WPS2Client getNewWps2Client() {
         try {
-            return new WPS2ClientImpl(new URL(Wps2ClientExecutionHelper.getServerUrl()));
+            WPS2ClientImpl wps2Client = new WPS2ClientImpl(new URL(Wps2ClientExecutionHelper.getServerUrl()));
+            if (Wps2ClientExecutionHelper.user != null && Wps2ClientExecutionHelper.password != null) {
+                wps2Client.getHttpClient().setUser(Wps2ClientExecutionHelper.user);
+                wps2Client.getHttpClient().setPassword(Wps2ClientExecutionHelper.password);
+            }
+            return wps2Client;
         } catch (MalformedURLException e) {
             LOGGER.error(e.getMessage(), e);
         }

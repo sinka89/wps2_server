@@ -42,6 +42,11 @@ public class Wps2ClientExecutionSyncBasicTest {
                 LOGGER.info("Server init failed... will continue");
             }
             WPS2CLIENT = new WPS2ClientImpl(new URL(Wps2ClientExecutionHelper.getServerUrl()));
+            if (Wps2ClientExecutionHelper.user != null && Wps2ClientExecutionHelper.password != null) {
+                WPS2CLIENT.getHttpClient().setUser(Wps2ClientExecutionHelper.user);
+                WPS2CLIENT.getHttpClient().setPassword(Wps2ClientExecutionHelper.password);
+            }
+
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
         }

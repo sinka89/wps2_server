@@ -20,4 +20,16 @@ public class Wps2ServerException extends RuntimeException {
     public ExceptionReport getExceptionReport() {
         return this.exceptionReport;
     }
+
+    public Wps2ServerException() {
+        super();
+    }
+
+    public Wps2ServerException(String message) {
+        super(message);
+    }
+
+    public Wps2ServerException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
