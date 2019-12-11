@@ -101,12 +101,6 @@ public class ProcessManager {
         if (ProcessCloserMap.INSTANCE.closureMap.containsKey(id)) {
             ProcessImplementation o = (ProcessImplementation) ProcessCloserMap.INSTANCE.closureMap.get(id);
             try {
-//                Class<?>[] interfaces = o.getClass().getInterfaces();
-//                for (Class<?> i : interfaces) {
-//                    if (i.isAssignableFrom(ProcessImplementation.class)) {
-//                        i.getMethod("closeAdditionalResources").invoke(o);
-//                    }
-//                }
                 o.closeAdditionalResources();
             } catch (Exception e) {
                 LOGGER.error(e.getMessage(), e);

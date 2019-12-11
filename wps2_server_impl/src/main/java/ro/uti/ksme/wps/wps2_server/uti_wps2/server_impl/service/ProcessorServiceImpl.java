@@ -39,8 +39,8 @@ public class ProcessorServiceImpl implements ProcessorService {
     @Override
     public void cancelProgress(UUID jobId) {
         ((CancellableRunnable) ProcessWorkerMapInstance.INSTANCE.workerMap.get(jobId).get("runnable")).cancel();
-        processManager.cancelProcess(jobId);
         ((Future<?>) ProcessWorkerMapInstance.INSTANCE.workerMap.get(jobId).get("future")).cancel(true);
+//        processManager.cancelProcess(jobId);
         ProcessWorkerMapInstance.INSTANCE.workerMap.remove(jobId);
     }
 

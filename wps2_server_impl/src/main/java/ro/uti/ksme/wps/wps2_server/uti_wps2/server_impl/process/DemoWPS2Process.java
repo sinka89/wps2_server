@@ -14,6 +14,7 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.output.Raw
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.process.Process;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.exception.ProcessingException;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.AbstractProcessImplementation;
+import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessResultWrapper;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
@@ -69,7 +70,7 @@ public class DemoWPS2Process extends AbstractProcessImplementation {
             )
     )
     @Override
-    public byte[] execute() throws ProcessingException {
+    public ProcessResultWrapper<byte[]> execute() throws ProcessingException {
         LOGGER.info("The process was identified and called via reflection...");
         if (this.boundingBoxInput != null) {
             LOGGER.info("Received the following Input of type BoundingBoxData from the request:\n" + this.boundingBoxInput.toString());
@@ -104,7 +105,11 @@ public class DemoWPS2Process extends AbstractProcessImplementation {
 //                        LOGGER.error("Infinite Loop");
 //                        Thread.sleep(0, 1);
 //                    }
-                    return IOUtils.toByteArray(this.getClass().getResourceAsStream("/dummy_result.tiff"));
+                    byte[] bytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/dummy_result.tiff"));
+                    ProcessResultWrapper<byte[]> result = new ProcessResultWrapper<>();
+                    result.setData(bytes);
+                    result.setMimeType("image/tiff");
+                    return result;
                 }
             }
             LOGGER.info("Returning processing result...");

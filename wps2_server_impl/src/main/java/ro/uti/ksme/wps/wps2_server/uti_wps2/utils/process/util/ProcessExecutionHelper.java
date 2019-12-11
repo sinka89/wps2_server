@@ -174,9 +174,6 @@ public abstract class ProcessExecutionHelper {
                 }
                 if (found) {
                     Object result = processObj.getClass().getMethod("execute").invoke(processObj);
-                    if (result instanceof BoundingBoxType) {
-                        result = marshallBoundingBoxTypeResult(result);
-                    }
                     dataMap.put(URI.create(o.getIdentifier().getValue()), result);
                 }
             }
@@ -186,7 +183,7 @@ public abstract class ProcessExecutionHelper {
         }
     }
 
-    private static Object marshallBoundingBoxTypeResult(Object result) {
+    public static Object marshallBoundingBoxTypeResult(Object result) {
         BoundingBoxType bboxType = (BoundingBoxType) result;
         try (StringWriter strW = new StringWriter()) {
             BoundingBoxData bboxData = new BoundingBoxData();

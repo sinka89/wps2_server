@@ -10,9 +10,9 @@ import ro.uti.ksme.wps.common.utils.enums.ProcessState;
 import ro.uti.ksme.wps.common.utils.enums.ResponseType;
 import ro.uti.ksme.wps.wps2.custom_pojo_types.RawData;
 import ro.uti.ksme.wps.wps2.pojo.ows._2.*;
+import ro.uti.ksme.wps.wps2.pojo.wps._2.*;
 import ro.uti.ksme.wps.wps2.pojo.wps._2.GetCapabilitiesType;
 import ro.uti.ksme.wps.wps2.pojo.wps._2.ReferenceType;
-import ro.uti.ksme.wps.wps2.pojo.wps._2.*;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.service.ProcessValidatorService;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.service.ProcessorService;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.service.ProcessorServiceSync;
@@ -21,6 +21,7 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.Wps2ServerProps;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.Wps2ServerUtils;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.CacheManagerWpsImpl;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessExecutionHelper;
+import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessResultWrapper;
 
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.io.Serializable;
@@ -417,10 +418,18 @@ public class Wps2OperationsImpl implements Wps2Operations {
                             list.add("");
                         } else {
                             String result;
-                            if (entry.getValue() instanceof byte[]) {
-                                result = Base64.getEncoder().encodeToString((byte[]) entry.getValue());
-                            } else if (entry.getValue() instanceof RawData) {
-                                result = ProcessExecutionHelper.marshallRawDataTypeResult(entry.getValue()).toString();
+                            //testing for ProcessResultWrapper wrapper if not found just take what is and call toString();
+                            if (entry.getValue() instanceof ProcessResultWrapper) {
+                                ProcessResultWrapper processResultWrapper = (ProcessResultWrapper) entry.getValue();
+                                if (processResultWrapper.getData() instanceof byte[]) {
+                                    result = Base64.getEncoder().encodeToString((byte[]) processResultWrapper.getData());
+                                } else if (processResultWrapper.getData() instanceof RawData) {
+                                    result = ProcessExecutionHelper.marshallRawDataTypeResult(processResultWrapper.getData()).toString();
+                                } else if (processResultWrapper.getData() instanceof BoundingBoxType) {
+                                    result = ProcessExecutionHelper.marshallBoundingBoxTypeResult(processResultWrapper.getData()).toString();
+                                } else {
+                                    result = processResultWrapper.getData().toString();
+                                }
                             } else {
                                 result = entry.getValue().toString();
                             }
@@ -429,6 +438,7 @@ public class Wps2OperationsImpl implements Wps2Operations {
                         data.getContent().addAll(list);
                         outputType.setData(data);
                     } else if (t.equals(DataTransmissionModeType.REFERENCE)) {
+                        //to decide if reference type mimeType get from declaration or let Process override from wrapper
                         ReferenceType refType = new ReferenceType();
                         if (outputDescriptionType.getDataDescription() != null && outputDescriptionType.getDataDescription().getValue() != null
                                 && outputDescriptionType.getDataDescription().getValue().getFormat().size() > 0) {
@@ -436,7 +446,7 @@ public class Wps2OperationsImpl implements Wps2Operations {
                             refType.setEncoding(format.getEncoding());
                             refType.setMimeType(format.getMimeType());
                         }
-                        refType.setHref(entry.getValue().toString());
+                        refType.setHref(((ProcessResultWrapper) entry.getValue()).getData().toString());
                         outputType.setReference(refType);
                     }
                 }

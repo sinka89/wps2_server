@@ -126,7 +126,7 @@ public class WpsServerHost {
     private static void setAuthIfAvailable(HttpContext context, Properties props) {
         final String usernameProp = props.getProperty("SERVER_AUTH_USER");
         final String passwordProp = props.getProperty("SERVER_AUTH_PASSWORD");
-        if (usernameProp != null && passwordProp != null) {
+        if (usernameProp != null && usernameProp.trim().length() > 0 && passwordProp != null && passwordProp.trim().length() > 0) {
             context.setAuthenticator(new BasicAuthenticator("/") {
                 @Override
                 public boolean checkCredentials(String user, String password) {

@@ -12,6 +12,7 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.output.Bou
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.process.Process;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.exception.ProcessingException;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.AbstractProcessImplementation;
+import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessResultWrapper;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.Unmarshaller;
@@ -52,7 +53,7 @@ public class DemoBoundingBoxProcess extends AbstractProcessImplementation {
             description = "The result must be of form ows2 BoundingBoxType so it will wrap itself inside a BoundingBoxData one layer up."
     ), boundingBoxAttr = @BoundingBoxAttr)
     @Override
-    public BoundingBoxType execute() throws ProcessingException {
+    public ProcessResultWrapper<BoundingBoxType> execute() throws ProcessingException {
         try {
             LOGGER.info("Received the following Input from the request: \n" + objectTestInputField1.toString());
             LOGGER.info("Trying to unmarshall data and process it...");
@@ -81,8 +82,10 @@ public class DemoBoundingBoxProcess extends AbstractProcessImplementation {
                 bt.setCrs("EPSG:4632");
                 bt.getLowerCorner().addAll(Arrays.asList(22.4, 55.2));
                 bt.getUpperCorner().addAll(Arrays.asList(55.2, 22.4));
-
-                return bt;
+                ProcessResultWrapper<BoundingBoxType> result = new ProcessResultWrapper<>();
+                result.setMimeType("application/xml");
+                result.setData(bt);
+                return result;
             }
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);

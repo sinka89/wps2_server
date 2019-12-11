@@ -12,10 +12,13 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.input.Lite
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.output.LiteralDataOutput;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.process.Process;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ObjectAnnotationConverter;
+import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessResultWrapper;
 
 import javax.xml.bind.JAXBElement;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 
 public class LiteralDataParser implements Parser {
     @Override
@@ -70,10 +73,28 @@ public class LiteralDataParser implements Parser {
         return getDataType(dataType, type);
     }
 
+    /**
+     * @param m the execute method from the process
+     * @return the literal data type
+     * calls reflection to get the generic type from ProcessResultWrapper<?>;
+     * for the moment left the old impl with getReturnType()
+     */
     private DataType getMethodDataType(Method m) {
         DataType dataType = null;
-        Class<?> type = m.getReturnType();
-        return getDataType(dataType, type);
+        Class<?> toTest;
+        Type genericReturnType = m.getGenericReturnType();
+        if (genericReturnType instanceof ParameterizedType) {
+            ParameterizedType genericParam = (ParameterizedType) genericReturnType;
+            if (genericParam.getRawType().getTypeName().equalsIgnoreCase(ProcessResultWrapper.class.getTypeName()) && genericParam.getActualTypeArguments().length == 1) {
+                toTest = (Class<?>) genericParam.getActualTypeArguments()[0];
+            } else {
+                return null;
+            }
+        } else {
+            //to remove if considered necessary... not used at the moment.
+            toTest = m.getReturnType();
+        }
+        return getDataType(dataType, toTest);
     }
 
     private DataType getDataType(DataType dataType, Class type) {

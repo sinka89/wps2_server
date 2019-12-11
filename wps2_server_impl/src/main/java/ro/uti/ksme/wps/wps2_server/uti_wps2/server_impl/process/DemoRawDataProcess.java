@@ -12,6 +12,7 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.process.Pr
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.exception.ProcessingException;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.AbstractProcessImplementation;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.FormatFactory;
+import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessResultWrapper;
 
 /**
  * @author Bogdan-Adrian Sincu created on 10/7/2019
@@ -50,7 +51,7 @@ public class DemoRawDataProcess extends AbstractProcessImplementation {
                     fileTypes = {".tiff"}
             ))
     @Override
-    public RawData execute() throws ProcessingException {
+    public ProcessResultWrapper<RawData> execute() throws ProcessingException {
         try {
             Object toReturn = null;
             byte[] bytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/dummy_result.tiff"));
@@ -58,7 +59,10 @@ public class DemoRawDataProcess extends AbstractProcessImplementation {
             rawData.setFile(true);
             rawData.setDirectory(false);
             rawData.setByteData(bytes);
-            return rawData;
+            ProcessResultWrapper<RawData> result = new ProcessResultWrapper<>();
+            result.setMimeType("application/xml");
+            result.setData(rawData);
+            return result;
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             throw new ProcessingException(e.initCause(e));

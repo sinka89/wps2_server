@@ -12,6 +12,7 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.service.ErrorService;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.service.process.ProcessManager;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.Wps2ServerProps;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.AbstractHttpRequestValidator;
+import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessResultWrapper;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.WpsProcessReflectionUtil;
 
 import javax.annotation.PostConstruct;
@@ -103,7 +104,7 @@ public class Wps2ServerImpl implements WpsServer {
                 return stringWriter;
             }
         }
-        if (result instanceof byte[]) {
+        if (result instanceof ProcessResultWrapper) {
             return result;
         } else {
             StringWriter out = new StringWriter();

@@ -9,6 +9,7 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.output.Lit
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.process.Process;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.exception.ProcessingException;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.AbstractProcessImplementation;
+import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessResultWrapper;
 
 import java.net.URL;
 
@@ -49,7 +50,7 @@ public class DemoRawDataProcessWithRef extends AbstractProcessImplementation {
             ),
             literalAttr = @LiteralDataAttr)
     @Override
-    public String execute() throws ProcessingException {
+    public ProcessResultWrapper<String> execute() throws ProcessingException {
         try {
             LOGGER.info("You provided the path " + pathProvided);
             Thread.sleep(200);
@@ -61,7 +62,9 @@ public class DemoRawDataProcessWithRef extends AbstractProcessImplementation {
             Thread.sleep(600);
 
             LOGGER.info("Processing complete the requested resource is at location: " + url.toString() + "/" + pathProvided);
-            return url.toString();
+            ProcessResultWrapper<String> result = new ProcessResultWrapper<>();
+            result.setData(url.toString());
+            return result;
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
             throw new ProcessingException(e.initCause(e));

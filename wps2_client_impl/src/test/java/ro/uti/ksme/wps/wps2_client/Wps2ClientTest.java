@@ -69,23 +69,30 @@ public class Wps2ClientTest {
     }
 
     @Test(expected = Wps2ServerException.class)
-    public void getCapabilitiesWithNoAuthMustFail() throws MalformedURLException {
+    public void getCapabilitiesWithNoAuthMustFailIfProvided() throws MalformedURLException {
         WPS2Client wps2Client = new WPS2ClientImpl(new URL(Wps2ClientExecutionHelper.getServerUrl()));
-        WPS2GetCapabilitiesResponse capabilities = wps2Client.getCapabilities();
-        Assert.assertNull(capabilities.getExceptionResponse());
-        Assert.assertNull(capabilities.getWpsCapabilitiesTypeResponse());
+        if (Wps2ClientExecutionHelper.user != null && Wps2ClientExecutionHelper.user.trim().length() > 0 && Wps2ClientExecutionHelper.password != null &&
+                Wps2ClientExecutionHelper.password.trim().length() > 0) {
+            WPS2GetCapabilitiesResponse capabilities = wps2Client.getCapabilities();
+            Assert.assertNull(capabilities.getExceptionResponse());
+            Assert.assertNull(capabilities.getWpsCapabilitiesTypeResponse());
+        } else {
+            throw new Wps2ServerException();
+        }
     }
 
     @Test
-    public void getCapabilitiesWithAuthMustSucceed() throws MalformedURLException {
+    public void getCapabilitiesWithAuthMustSucceedIfProvided() throws MalformedURLException {
         WPS2Client wps2Client = new WPS2ClientImpl(new URL(Wps2ClientExecutionHelper.getServerUrl()));
-        wps2Client.getHttpClient().setUser(Wps2ClientExecutionHelper.user);
-        wps2Client.getHttpClient().setPassword(Wps2ClientExecutionHelper.password);
-        WPS2GetCapabilitiesResponse capabilities = wps2Client.getCapabilities();
-        Assert.assertNotNull(capabilities);
-        Assert.assertNull(capabilities.getExceptionResponse());
-        Assert.assertNotNull(capabilities.getWpsCapabilitiesTypeResponse());
-
+        if (Wps2ClientExecutionHelper.user != null && Wps2ClientExecutionHelper.user.trim().length() > 0 && Wps2ClientExecutionHelper.password != null &&
+                Wps2ClientExecutionHelper.password.trim().length() > 0) {
+            wps2Client.getHttpClient().setUser(Wps2ClientExecutionHelper.user);
+            wps2Client.getHttpClient().setPassword(Wps2ClientExecutionHelper.password);
+            WPS2GetCapabilitiesResponse capabilities = wps2Client.getCapabilities();
+            Assert.assertNotNull(capabilities);
+            Assert.assertNull(capabilities.getExceptionResponse());
+            Assert.assertNotNull(capabilities.getWpsCapabilitiesTypeResponse());
+        }
     }
 
     @Test
