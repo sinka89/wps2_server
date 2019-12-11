@@ -68,6 +68,10 @@ public class WPS2ExecuteProcessResponse extends GenericResponse implements Prope
         return rawResponseStream;
     }
 
+    public boolean isRawResponseStreamAvailable() {
+        return this.rawResponseStream != null && this.rawResponseStream.getTotalNumBytesRead() == 0;
+    }
+
     public String getRawContentType() {
         return rawContentType;
     }
