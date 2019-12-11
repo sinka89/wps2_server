@@ -2,6 +2,8 @@ package ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.service.process.CancellableRunnable;
+import ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.service.process.MonitorThread;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +28,7 @@ public abstract class AbstractProcessImplementation implements ProcessImplementa
     /**
      * Take all closable resources from list and call appropriate action.
      */
-    public final void closeAdditionalResources() {
+    public final void closeAdditionalResources(CancellableRunnable runnable) {
         if (listOfCancelableResources != null && !listOfCancelableResources.isEmpty()) {
             lock.lock();
             try {
@@ -38,16 +40,19 @@ public abstract class AbstractProcessImplementation implements ProcessImplementa
                             inputStream.close();
                         } catch (IOException e) {
                             LOGGER.error(e.getMessage(), e);
-                        } finally {
-                            listOfCancelableResources.remove(i);
-                            --size;
                         }
                     } else if (listOfCancelableResources.get(i) instanceof HttpURLConnection) {
                         HttpURLConnection httpURLConnection = (HttpURLConnection) listOfCancelableResources.get(i);
                         httpURLConnection.disconnect();
-                        listOfCancelableResources.remove(i);
-                        --size;
+                    } else if (listOfCancelableResources.get(i) instanceof Thread) {
+                        Thread thread = (Thread) listOfCancelableResources.get(i);
+                        if (thread.getId() == runnable.getWorker().getId()) {
+                            MonitorThread monitorThread = new MonitorThread(runnable);
+                            monitorThread.start();
+                        }
                     }
+                    listOfCancelableResources.remove(i);
+                    --size;
                 }
             } finally {
                 lock.unlock();

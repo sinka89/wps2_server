@@ -97,11 +97,11 @@ public class ProcessManager {
         progressVisitor.endStep();
     }
 
-    public void cancelProcess(UUID id) {
+    public void cancelProcess(UUID id, CancellableRunnable runnable) {
         if (ProcessCloserMap.INSTANCE.closureMap.containsKey(id)) {
             ProcessImplementation o = (ProcessImplementation) ProcessCloserMap.INSTANCE.closureMap.get(id);
             try {
-                o.closeAdditionalResources();
+                o.closeAdditionalResources(runnable);
             } catch (Exception e) {
                 LOGGER.error(e.getMessage(), e);
             } finally {

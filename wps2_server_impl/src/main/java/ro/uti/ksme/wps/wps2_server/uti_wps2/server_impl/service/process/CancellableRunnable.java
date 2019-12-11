@@ -9,6 +9,19 @@ package ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.service.process;
  */
 public interface CancellableRunnable extends Runnable {
 
+    void start();
 
     void cancel();
+
+    void stop();
+
+    void interrupt();
+
+    boolean isRunning();
+
+    boolean isStopped();
+
+    void forceStop();
+
+    Thread getWorker();
 }

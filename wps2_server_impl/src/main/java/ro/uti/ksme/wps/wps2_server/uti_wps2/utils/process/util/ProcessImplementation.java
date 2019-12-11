@@ -1,5 +1,7 @@
 package ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util;
 
+import ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.service.process.CancellableRunnable;
+
 /**
  * Created by IntelliJ IDEA.
  *
@@ -13,7 +15,7 @@ package ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util;
  * that on dismiss the server will try to force close no matter the state of the process or result.
  */
 public interface ProcessImplementation {
-    ProcessResultWrapper execute();
+    ProcessResultWrapper<?> execute();
 
-    void closeAdditionalResources();
+    void closeAdditionalResources(CancellableRunnable runnable);
 }

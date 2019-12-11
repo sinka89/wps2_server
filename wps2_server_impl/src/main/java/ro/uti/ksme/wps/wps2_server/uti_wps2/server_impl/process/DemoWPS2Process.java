@@ -75,6 +75,7 @@ public class DemoWPS2Process extends AbstractProcessImplementation {
         if (this.boundingBoxInput != null) {
             LOGGER.info("Received the following Input of type BoundingBoxData from the request:\n" + this.boundingBoxInput.toString());
         }
+//        addClosableResource(Thread.currentThread());
         try {
 //            Thread.sleep(1000);
             if (this.boundingBoxInput != null) {
@@ -103,7 +104,7 @@ public class DemoWPS2Process extends AbstractProcessImplementation {
                     LOGGER.info("Continuing processing to return dummy .tiff...");
 //                    while (true) {
 //                        LOGGER.error("Infinite Loop");
-//                        Thread.sleep(0, 1);
+////                        Thread.sleep(0, 1);
 //                    }
                     byte[] bytes = IOUtils.toByteArray(this.getClass().getResourceAsStream("/dummy_result.tiff"));
                     ProcessResultWrapper<byte[]> result = new ProcessResultWrapper<>();
