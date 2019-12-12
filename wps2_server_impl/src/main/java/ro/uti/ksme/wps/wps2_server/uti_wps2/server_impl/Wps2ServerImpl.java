@@ -11,9 +11,8 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.operations.Wps2Operation
 import ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.service.ErrorService;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.service.process.ProcessManager;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.Wps2ServerProps;
-import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.AbstractHttpRequestValidator;
-import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessResultWrapper;
-import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.WpsProcessReflectionUtil;
+import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.model.exceptions.MalformedModelException;
+import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.*;
 
 import javax.annotation.PostConstruct;
 import javax.xml.bind.JAXBElement;
@@ -23,6 +22,7 @@ import javax.xml.bind.Unmarshaller;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
+import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -129,7 +129,22 @@ public class Wps2ServerImpl implements WpsServer {
     private void loadAllProcessesByClass() {
         Collection<Class<?>> listOfProcessesClass = WpsProcessReflectionUtil.getListOfProcessesClass();
         for (Class<?> cls : listOfProcessesClass) {
-            processManager.createAndAddProcess(cls);
+            if (!cls.getSuperclass().getTypeName().equalsIgnoreCase(AbstractProcessImplementation.class.getTypeName())) {
+                Type[] genericInterfaces = cls.getGenericInterfaces();
+                boolean interfaceFound = false;
+                for (Type aInterface : genericInterfaces) {
+                    if (aInterface.getTypeName().equalsIgnoreCase(ProcessImplementation.class.getTypeName())) {
+                        interfaceFound = true;
+                        break;
+                    }
+                }
+                if (!interfaceFound) {
+                    throw new MalformedModelException(cls, "NoProperInheritanceFound", "Could not load the defined process! A correct process class must be defined by @Process annotation" +
+                            "and must extend the AbstractProcessImplementation.class or implement the ProcessImplementation.class");
+                }
+            } else {
+                processManager.createAndAddProcess(cls);
+            }
         }
     }
 }
