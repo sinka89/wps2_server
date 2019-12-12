@@ -30,7 +30,7 @@ public class LiteralDataParser implements Parser {
         if (dataType == null) {
             throw new MalformedModelException(LiteralDataInput.class, f.getName(), "Filed type not recognized");
         }
-        LiteralDataType data = ObjectAnnotationConverter.annotationToObject(f.getAnnotation(LiteralDataInput.class).literalAttr(), dataType, null);
+        LiteralDataType data = ObjectAnnotationConverter.annotationToObject(f.getAnnotation(LiteralDataInput.class).literalAttr(), dataType, defaultValue);
         JAXBElement<LiteralDataType> jaxbElement = new ObjectFactory().createLiteralData(data);
         input.setDataDescription(jaxbElement);
 

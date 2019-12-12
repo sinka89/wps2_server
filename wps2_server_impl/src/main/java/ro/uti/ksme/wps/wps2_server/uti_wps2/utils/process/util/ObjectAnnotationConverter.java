@@ -22,8 +22,13 @@ public class ObjectAnnotationConverter {
     public static LiteralDataType annotationToObject(LiteralDataAttr literalDataAttr, DataType dataType, Object defaultValueStr) throws MalformedModelException {
         LiteralDataType literalDataType = new LiteralDataType();
         List<Format> formatList = new ArrayList<>();
-        formatList.add(FormatFactory.getFormatFromExtension(FormatFactory.TEXT_EXTENSION));
-        formatList.get(0).setDefault(true);
+        for (String format : literalDataAttr.formats()) {
+            Format formatFromExtension = FormatFactory.getFormatFromExtension(format);
+            if (format.equalsIgnoreCase(literalDataAttr.defaultFormat())) {
+                formatFromExtension.setDefault(true);
+            }
+            formatList.add(formatFromExtension);
+        }
         literalDataType.getFormat().addAll(formatList);
 
         List<LiteralDataType.LiteralDataDomain> literalDataDomains = new ArrayList<>();

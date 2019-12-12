@@ -2,6 +2,7 @@ package ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.process;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ro.uti.ksme.wps.common.utils.enums.JobControlOps;
 import ro.uti.ksme.wps.wps2.pojo.wps._2.DataTransmissionModeType;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.attributes.*;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.input.LiteralDataInput;
@@ -9,9 +10,8 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.output.Lit
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.process.Process;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.exception.ProcessingException;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.AbstractProcessImplementation;
+import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.FormatFactory;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessResultWrapper;
-
-import java.net.URL;
 
 /**
  * Created by IntelliJ IDEA.
@@ -22,10 +22,11 @@ import java.net.URL;
  */
 @Process(processAttr = @ProcessAttr(
         version = "0.0.0_a",
-        dataTransmissionType = DataTransmissionModeType.REFERENCE
+        dataTransmissionType = DataTransmissionModeType.REFERENCE,
+        jobControl = {JobControlOps.SYNC, JobControlOps.ASYNC}
 ),
         descriptionType = @DescriptionTypeAttr(
-                title = "This process executes and returns a reference to a location",
+                title = "This process simulates a processing that returns a reference to a geoserver layer. By convention the result reference must be of form geoserver://layer_name so that the client gui will display appropriately",
                 identifier = "processExecutionRef"
         ))
 public class DemoRawDataProcessWithRef extends AbstractProcessImplementation {
@@ -35,35 +36,38 @@ public class DemoRawDataProcessWithRef extends AbstractProcessImplementation {
     @InputAnnotation
     @LiteralDataInput(inputAttr = @InputAttr,
             descriptionType = @DescriptionTypeAttr(
-                    title = "The literal input attr... will try to check the string (path) provided and return a ref if the file is present",
-                    identifier = "locationInput"
+                    title = "Literal data input. for testing purpose it accepts the real layer name in the associated geoserver. Will return a reference format for the input layer ex: \"neuport:neuport_v_roads\"",
+                    identifier = "layerNameInput"
             ),
             literalAttr = @LiteralDataAttr)
-    private String pathProvided;
+    private String layerNameProvided = "neuport:neuport_v_roads";
 
 
     @OutputAnnotation
     @LiteralDataOutput(outputAttr = @OutputAttr,
             descriptionType = @DescriptionTypeAttr(
-                    title = "The response that represents a reference to a processable result location",
+                    title = "The response that represents a reference to a processable result location. In the case of a layer use convention and the mimeType must be a subtype wfs.",
                     identifier = "result"
             ),
-            literalAttr = @LiteralDataAttr)
+            literalAttr = @LiteralDataAttr(
+                    formats = {FormatFactory.WFS_EXTENSION},
+                    defaultFormat = FormatFactory.WFS_EXTENSION
+            ))
     @Override
     public ProcessResultWrapper<String> execute() throws ProcessingException {
         try {
-            LOGGER.info("You provided the path " + pathProvided);
+            LOGGER.info("You provided the following layer name " + layerNameProvided);
             Thread.sleep(200);
-            LOGGER.info("Doing stuff...");
-            Thread.sleep(200);
-            URL url = new URL("http://localhost/dummy_reference");
+            LOGGER.info("Intense processing... :)");
+            Thread.sleep(800);
 
-            LOGGER.info("Processing stuff...");
-            Thread.sleep(600);
-
-            LOGGER.info("Processing complete the requested resource is at location: " + url.toString() + "/" + pathProvided);
+            LOGGER.info("More processing...");
+            Thread.sleep(300);
+            layerNameProvided = "geoserver://" + layerNameProvided;
+            LOGGER.info("Processing complete the requested resource is a layer on associated geoserver with the name: " + layerNameProvided);
             ProcessResultWrapper<String> result = new ProcessResultWrapper<>();
-            result.setData(url.toString());
+            result.setMimeType("text/xml;subtype=wfs-collection/1.0");
+            result.setData(layerNameProvided);
             return result;
         } catch (Exception e) {
             LOGGER.error(e.getMessage(), e);
@@ -71,11 +75,11 @@ public class DemoRawDataProcessWithRef extends AbstractProcessImplementation {
         }
     }
 
-    public String getPathProvided() {
-        return pathProvided;
+    public String getLayerNameProvided() {
+        return layerNameProvided;
     }
 
-    public void setPathProvided(String pathProvided) {
-        this.pathProvided = pathProvided;
+    public void setLayerNameProvided(String layerNameProvided) {
+        this.layerNameProvided = layerNameProvided;
     }
 }

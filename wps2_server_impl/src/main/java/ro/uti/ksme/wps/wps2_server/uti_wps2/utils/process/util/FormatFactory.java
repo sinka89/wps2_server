@@ -31,6 +31,10 @@ public class FormatFactory {
     public static final String TIFF_EXTENSION = ".tiff";
     public static final String TIFF_MIMETYPE = "image/tiff";
 
+    public static final String WFS_EXTENSION = "text/xml;wfs/1.0";
+    public static final String WFS_MIMETYPE = "text/xml;subtype=wfs-collection/1.0";
+    public static final String OWS_URI = "http://www.opengis.net/ows/2.0";
+
     public static Format getFormatFromExtension(String extension) {
         Format format = new Format();
         switch (extension) {
@@ -55,6 +59,11 @@ public class FormatFactory {
                 break;
             case TIFF_EXTENSION:
                 format.setMimeType(TIFF_MIMETYPE);
+                break;
+            case WFS_EXTENSION:
+                format.setMimeType(WFS_MIMETYPE);
+                format.setSchema(OWS_URI);
+                format.setEncoding(DEFAULT_ENCODING);
                 break;
             default:
                 format.setMimeType(TEXT_MIMETYPE);
