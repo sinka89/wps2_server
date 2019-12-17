@@ -3,12 +3,10 @@ package ro.uti.ksme.wps.wps2_server.uti_wps2.server_impl.process;
 import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ro.uti.ksme.wps.common.utils.enums.JobControlOps;
 import ro.uti.ksme.wps.wps2.custom_pojo_types.RawData;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.attributes.*;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.input.RawDataInput;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.output.RawDataOutput;
-import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.annotations.process.Process;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.exception.ProcessingException;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.AbstractProcessImplementation;
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.FormatFactory;
@@ -19,13 +17,14 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessResultWrap
  * RawData extension example... receives something -> process -> returns a RawData Object with some byte data inside
  */
 @SuppressWarnings("ALL")
-@Process(processAttr = @ProcessAttr(
-        jobControl = JobControlOps.SYNC
-),
-        descriptionType = @DescriptionTypeAttr(
-                title = "Raw Data Process Ex",
-                identifier = "rawDataEx"
-        ))
+//For the purpose of the demo the file upload is not yet implemented -> commented so it will not appear in the describe process
+//@Process(processAttr = @ProcessAttr(
+//        jobControl = JobControlOps.SYNC
+//),
+//        descriptionType = @DescriptionTypeAttr(
+//                title = "Raw Data Process Ex",
+//                identifier = "rawDataEx"
+//        ))
 public class DemoRawDataProcess extends AbstractProcessImplementation {
     private static final Logger LOGGER = LoggerFactory.getLogger(DemoRawDataProcess.class);
 
