@@ -195,6 +195,7 @@ public class Wps2OperationsImpl implements Wps2Operations {
 
                 processSummaryTypeList.add(processSummaryType);
             }
+            processSummaryTypeList.sort((o1, o2) -> o1.getIdentifier().getValue().compareToIgnoreCase(o2.getIdentifier().getValue()));
             contents.getProcessSummary().addAll(processSummaryTypeList);
             capType.setContents(contents);
         }

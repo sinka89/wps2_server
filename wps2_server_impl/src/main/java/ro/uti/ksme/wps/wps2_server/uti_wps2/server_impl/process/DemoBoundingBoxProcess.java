@@ -26,7 +26,7 @@ import java.util.Arrays;
  */
 @Process(descriptionType = @DescriptionTypeAttr(
         title = "This is a demo process for demonstrating WPS2 server execution that accepts a BoundingBoxData and returns one.",
-        identifier = "processBoundingBox",
+        identifier = "boundingBoxProcess",
         keywords = {"boundingBox"},
         description = "Test boundingBox process example"
 ), processAttr = @ProcessAttr(
