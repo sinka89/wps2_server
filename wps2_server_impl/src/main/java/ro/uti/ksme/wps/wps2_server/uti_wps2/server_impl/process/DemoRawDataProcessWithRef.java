@@ -26,8 +26,8 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessResultWrap
         jobControl = {JobControlOps.SYNC, JobControlOps.ASYNC}
 ),
         descriptionType = @DescriptionTypeAttr(
-                title = "This process simulates a processing that returns a reference to a geoserver layer. By convention the result reference must be of form geoserver://layer_name so that the client gui will display appropriately",
-                identifier = "processExecutionRef"
+                title = "This process simulates a processing that returns a reference to a geoserver layer. By convention the result reference must be of form geoserver://workspace:layer_name so that the client gui will display appropriately. In this scenario the client implementation will try to find it on the associated geoserver.",
+                identifier = "layerReference"
         ))
 public class DemoRawDataProcessWithRef extends AbstractProcessImplementation {
 
@@ -36,7 +36,7 @@ public class DemoRawDataProcessWithRef extends AbstractProcessImplementation {
     @InputAnnotation
     @LiteralDataInput(inputAttr = @InputAttr,
             descriptionType = @DescriptionTypeAttr(
-                    title = "Literal data input. for testing purpose it accepts the real layer name in the associated geoserver. Will return a reference format for the input layer ex: \"neuport:neuport_v_roads\"",
+                    title = "Literal data input. for testing purpose it accepts the real layer name in the associated geoserver (workspace:layer_name). Will return a reference format for the input layer ex: \"neuport:neuport_v_roads\"",
                     identifier = "layerNameInput"
             ),
             literalAttr = @LiteralDataAttr)

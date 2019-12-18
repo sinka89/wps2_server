@@ -32,7 +32,7 @@ import java.io.StringReader;
         descriptionType = @DescriptionTypeAttr(
                 keywords = {"ProcessKeyWord"},
                 title = "This is a demo process for demonstrating WPS2 server execution that returns a file in this case a .tiff",
-                identifier = "demoProcessDownloadTiff"
+                identifier = "downloadTiff"
         ))
 public class DemoWPS2Process extends AbstractProcessImplementation {
     private static final Logger LOGGER = LoggerFactory.getLogger(DemoWPS2Process.class);
@@ -60,7 +60,7 @@ public class DemoWPS2Process extends AbstractProcessImplementation {
     @RawDataOutput(
             outputAttr = @OutputAttr,
             descriptionType = @DescriptionTypeAttr(
-                    title = "The result that the execution is offering",
+                    title = "The result that the execution is offering of raw type",
                     identifier = "rawDataExecuteResponse"
             ),
             rawDataAttr = @RawDataAttr(

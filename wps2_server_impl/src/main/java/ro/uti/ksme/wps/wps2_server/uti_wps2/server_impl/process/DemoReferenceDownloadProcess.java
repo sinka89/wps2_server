@@ -33,8 +33,8 @@ import java.io.StringReader;
         jobControl = {JobControlOps.ASYNC, JobControlOps.SYNC}
 ),
         descriptionType = @DescriptionTypeAttr(
-                title = "This process simulates a processing that returns a reference to a resource that can be downloaded",
-                identifier = "processExecuteDownloadRef"
+                title = "This process simulates a processing that returns a reference to a resource that can be downloaded.",
+                identifier = "downloadReference"
         ))
 public class DemoReferenceDownloadProcess extends AbstractProcessImplementation {
     private static final Logger LOGGER = LoggerFactory.getLogger(DemoReferenceDownloadProcess.class);

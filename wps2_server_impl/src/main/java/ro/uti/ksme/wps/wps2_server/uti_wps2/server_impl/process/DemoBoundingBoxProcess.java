@@ -25,7 +25,7 @@ import java.util.Arrays;
  * Example of process that accepts a Modified wps:BoundingBoxData(with ows:BoundingBoxType inside) does something and returns a new BoundingBoxData obj
  */
 @Process(descriptionType = @DescriptionTypeAttr(
-        title = "This is a demo process for demonstrating WPS2 server execution that accepts a BoundingBoxData and returns one",
+        title = "This is a demo process for demonstrating WPS2 server execution that accepts a BoundingBoxData and returns one.",
         identifier = "processBoundingBox",
         keywords = {"boundingBox"},
         description = "Test boundingBox process example"
