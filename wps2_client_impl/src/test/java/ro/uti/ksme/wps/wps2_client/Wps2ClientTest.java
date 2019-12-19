@@ -97,7 +97,7 @@ public class Wps2ClientTest {
 
     @Test
     public void describeProcessWithSpecificIdentifierTest() {
-        WPS2DescribeProcessResponse processOfferings = WPS2CLIENT.describeProcess("demoProcessDownloadTiff", "");
+        WPS2DescribeProcessResponse processOfferings = WPS2CLIENT.describeProcess("downloadTiff", "");
         Assert.assertNotNull(processOfferings);
         Assert.assertNotNull(processOfferings.getProcessOfferings());
         Assert.assertNull(processOfferings.getExceptionReport());

@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import ro.uti.ksme.wps.wps2.pojo.ows._2.*;
 
+import java.io.File;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.Properties;
@@ -29,7 +30,10 @@ public class Wps2ServerProps {
 
     public Wps2ServerProps() {
         Properties wpsProps = new Properties();
-        URL url = this.getClass().getClassLoader().getResource(SERVER_PROPERTIES);
+        URL url = getExternalPropsUrl();
+        if (url == null) {
+            url = this.getClass().getClassLoader().getResource(SERVER_PROPERTIES);
+        }
         if (url == null) {
             LOGGER.error("ERROR >>>> Cannot find wps2_config.properties!!!");
             System.exit(2);
@@ -52,7 +56,10 @@ public class Wps2ServerProps {
         Integer threadCount = 24;
         try {
             Properties wpsPros = new Properties();
-            URL url = Wps2ServerProps.class.getClassLoader().getResource(SERVER_PROPERTIES);
+            URL url = getExternalPropsUrl();
+            if (url == null) {
+                url = Wps2ServerProps.class.getClassLoader().getResource(SERVER_PROPERTIES);
+            }
             if (url == null) {
                 return threadCount;
             } else {
@@ -65,11 +72,27 @@ public class Wps2ServerProps {
         return threadCount;
     }
 
+    public static URL getExternalPropsUrl() {
+        try {
+            File jarPath = new File(Wps2ServerProps.class.getProtectionDomain().getCodeSource().getLocation().getPath());
+            String propertiesPath = jarPath.getParentFile().getAbsolutePath();
+            File f = new File(propertiesPath + "/" + SERVER_PROPERTIES);
+            if (f.exists()) {
+                return f.toURI().toURL();
+            }
+        } catch (Exception ignored) {
+        }
+        return null;
+    }
+
     public static Integer getWpsProcessesExecutorThreadPool() {
         Integer threadCount = 32;
         try {
             Properties wpsProps = new Properties();
-            URL url = Wps2ServerProps.class.getClassLoader().getResource(SERVER_PROPERTIES);
+            URL url = getExternalPropsUrl();
+            if (url == null) {
+                url = Wps2ServerProps.class.getClassLoader().getResource(SERVER_PROPERTIES);
+            }
             if (url == null) {
                 return threadCount;
             } else {
@@ -87,7 +110,10 @@ public class Wps2ServerProps {
         String pass = "";
         try {
             Properties wpsProps = new Properties();
-            URL url = Wps2ServerProps.class.getClassLoader().getResource(SERVER_PROPERTIES);
+            URL url = getExternalPropsUrl();
+            if (url == null) {
+                url = Wps2ServerProps.class.getClassLoader().getResource(SERVER_PROPERTIES);
+            }
             wpsProps.load(new InputStreamReader(url.openStream()));
             pass = wpsProps.getProperty("HTTPS_SERVER_JKS_TOKEN_PASS");
         } catch (Exception e) {

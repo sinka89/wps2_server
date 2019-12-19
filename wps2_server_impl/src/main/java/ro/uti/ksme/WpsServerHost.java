@@ -110,7 +110,10 @@ public class WpsServerHost {
     private static Properties getProperties() {
         Properties properties = null;
         try {
-            URL url = WpsServerHost.class.getClassLoader().getResource(PROP_NAME);
+            URL url = Wps2ServerProps.getExternalPropsUrl();
+            if (url == null) {
+                url = WpsServerHost.class.getClassLoader().getResource(PROP_NAME);
+            }
             if (url == null) {
                 LOGGER.error("ERROR >>>> Unable to find properties file with name: " + PROP_NAME);
                 throw new Exception("ERROR >>>> Unable to find properties file with name: " + PROP_NAME);

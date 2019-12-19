@@ -27,7 +27,7 @@ public class Wps2ClientExecutionHelper {
     public static String password = null;
 
     public static ExecuteProcessRequest executeDemoProcessDownloadTiff(ExecuteProcessRequest executeProcessRequest) {
-        executeProcessRequest.setIdentifier("demoProcessDownloadTiff");
+        executeProcessRequest.setIdentifier("downloadTiff");
         Data data = new Data();
         data.getContent().add(
                 "<wps:BoundingBoxData xmlns:wps=\"http://www.opengis.net/wps/2.0\" xmlns:ows=\"http://www.opengis.net/ows/2.0\">\n" +
@@ -38,7 +38,7 @@ public class Wps2ClientExecutionHelper {
                         "            \t\t<ows:UpperCorner>44.2 23.6</ows:UpperCorner>\n" +
                         "        \t\t</ows:BoundingBox>\n" +
                         "\t\t\t</wps:BoundingBoxData>\n");
-        executeProcessRequest.addInput("demoProcessDownloadTiff:bboxInput", Collections.singletonList(data));
+        executeProcessRequest.addInput("downloadTiff:bboxInput", Collections.singletonList(data));
         OutputDefinitionType out = new OutputDefinitionType();
         out.setId("rawDataEx:rawDataOutput");
         out.setTransmission(DataTransmissionModeType.VALUE);
