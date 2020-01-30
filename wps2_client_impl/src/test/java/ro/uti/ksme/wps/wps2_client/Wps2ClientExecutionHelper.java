@@ -40,7 +40,7 @@ public class Wps2ClientExecutionHelper {
                         "\t\t\t</wps:BoundingBoxData>\n");
         executeProcessRequest.addInput("downloadTiff:bboxInput", Collections.singletonList(data));
         OutputDefinitionType out = new OutputDefinitionType();
-        out.setId("rawDataEx:rawDataOutput");
+        out.setId("downloadTiff:rawDataExecuteResponse");
         out.setTransmission(DataTransmissionModeType.VALUE);
         executeProcessRequest.setOutputDefinitionType(out);
         return executeProcessRequest;

@@ -1,5 +1,8 @@
 package ro.uti.ksme.wps.wps2_client.response;
 
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ro.uti.ksme.wps.wps2.pojo.ows._2.ExceptionReport;
 import ro.uti.ksme.wps.wps2.pojo.wps._2.Result;
 import ro.uti.ksme.wps.wps2.pojo.wps._2.StatusInfo;
@@ -11,6 +14,7 @@ import javax.xml.bind.Unmarshaller;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -22,6 +26,7 @@ import java.io.InputStream;
  * Time: 1:33 PM
  */
 public class WPS2ExecuteProcessResponse extends GenericResponse implements PropertyChangeListener {
+    private static final Logger LOGGER = LoggerFactory.getLogger(WPS2ExecuteProcessResponse.class);
     private ExceptionReport exceptionReport;
     private ProgressInputStream rawResponseStream;
     private String rawContentType;
@@ -37,7 +42,11 @@ public class WPS2ExecuteProcessResponse extends GenericResponse implements Prope
         try {
             if (rawContentType.matches(".*/xml.*")) {
                 Unmarshaller unmarshaller = JaxbContainer.INSTANCE.jaxbContext.createUnmarshaller();
-                inputStream = new ProgressInputStream(new BufferedInputStream(httpClientResponse.getResponseInputStream()), httpClientResponse.getResponseInputStream().available());
+                byte[] bytes = IOUtils.toByteArray(httpClientResponse.getResponseInputStream());
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("INFO_WPS2_CLIENT >>>> The following data was received from the Wps2 Server implementation \n" + new String(bytes) + "\n");
+                }
+                inputStream = new ProgressInputStream(new BufferedInputStream(new ByteArrayInputStream(bytes)), bytes.length);
                 inputStream.addPropertyChangeListener(this);
                 Object obj = unmarshaller.unmarshal(inputStream);
                 if (obj instanceof Result) {

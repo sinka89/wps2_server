@@ -25,7 +25,7 @@ public class WPS2GetCapabilitiesResponse extends GenericResponse {
     public WPS2GetCapabilitiesResponse(HttpClientResponse response) throws IOException, JAXBException {
         super(response);
         Unmarshaller unmarshaller = JaxbContainer.INSTANCE.jaxbContext.createUnmarshaller();
-        Object obj = unmarshaller.unmarshal(new BufferedInputStream(httpClientResponse.getResponseInputStream()));
+        Object obj = unmarshaller.unmarshal(new BufferedInputStream(LOG_STREAM_XML.log(httpClientResponse.getResponseInputStream())));
         if (obj instanceof JAXBElement) {
             JAXBElement jaxbElement = (JAXBElement) obj;
             if (jaxbElement.getValue() != null && jaxbElement.getValue() instanceof WPSCapabilitiesType) {

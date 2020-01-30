@@ -24,7 +24,7 @@ public class WPS2StatusInfoResponse extends GenericResponse {
     public WPS2StatusInfoResponse(HttpClientResponse response) throws IOException, JAXBException {
         super(response);
         Unmarshaller unmarshaller = JaxbContainer.INSTANCE.jaxbContext.createUnmarshaller();
-        Object obj = unmarshaller.unmarshal(new BufferedInputStream(httpClientResponse.getResponseInputStream()));
+        Object obj = unmarshaller.unmarshal(new BufferedInputStream(LOG_STREAM_XML.log(httpClientResponse.getResponseInputStream())));
         if (obj instanceof StatusInfo) {
             this.statusInfo = (StatusInfo) obj;
         } else if (obj instanceof ExceptionReport) {

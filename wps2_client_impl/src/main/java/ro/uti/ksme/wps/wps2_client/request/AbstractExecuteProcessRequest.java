@@ -42,9 +42,7 @@ public abstract class AbstractExecuteProcessRequest implements ExecuteProcessReq
 
     @Override
     public void setOutputDefinitionType(OutputDefinitionType output) {
-        if (this.outputDefinitionType != null) {
-            this.outputDefinitionType = output;
-        }
+        this.outputDefinitionType = output;
     }
 
     @Override
@@ -86,7 +84,9 @@ public abstract class AbstractExecuteProcessRequest implements ExecuteProcessReq
             }
         }
 
-        executeRequestType.getOutput().add(this.outputDefinitionType);
+        if (this.outputDefinitionType != null) {
+            executeRequestType.getOutput().add(this.outputDefinitionType);
+        }
         executeRequestType.setMode(getExecutionType().getMode());
         executeRequestType.setResponse(getResponseType().getType());
         CodeType codeTypeIdentifier = new CodeType();

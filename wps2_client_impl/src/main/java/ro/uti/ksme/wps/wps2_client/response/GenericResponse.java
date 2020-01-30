@@ -1,7 +1,12 @@
 package ro.uti.ksme.wps.wps2_client.response;
 
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import ro.uti.ksme.wps.wps2_client.connection_util.HttpClientResponse;
+import ro.uti.ksme.wps.wps2_client.connection_util.LogStreamContentFunctional;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -13,7 +18,15 @@ import java.io.InputStream;
  * Time: 12:10 PM
  */
 public abstract class GenericResponse implements HttpClientResponse {
+    private static final Logger LOGGER = LoggerFactory.getLogger(GenericResponse.class);
     protected HttpClientResponse httpClientResponse;
+    protected static final LogStreamContentFunctional LOG_STREAM_XML = postContent -> {
+        byte[] bytes = IOUtils.toByteArray(postContent);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("INFO_WPS2_CLIENT >>>> The following data was received from the Wps2 Server implementation \n" + new String(bytes) + "\n");
+        }
+        return new ByteArrayInputStream(bytes);
+    };
 
     public GenericResponse(HttpClientResponse response) throws IOException {
         if (response.getResponseInputStream() == null) {

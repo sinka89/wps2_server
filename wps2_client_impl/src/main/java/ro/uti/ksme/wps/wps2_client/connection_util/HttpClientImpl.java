@@ -1,9 +1,11 @@
 package ro.uti.ksme.wps.wps2_client.connection_util;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ro.uti.ksme.wps.wps2_client.exception.Wps2ServerException;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -23,6 +25,13 @@ import java.util.Base64;
 public class HttpClientImpl implements HttpClient {
     private static final Logger LOGGER = LoggerFactory.getLogger(HttpClientImpl.class);
     private static final int DEFAULT_TIMEOUT = 30;
+    private static final LogStreamContentFunctional LOG_STREAM_XML = postContent -> {
+        byte[] bytes = IOUtils.toByteArray(postContent);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("INFO_WPS2_CLIENT >>>> The following data is sent to the Wps2 Server implementation \n" + new String(bytes) + "\n");
+        }
+        return new ByteArrayInputStream(bytes);
+    };
 
     private String user;
     private String password;
@@ -60,6 +69,9 @@ public class HttpClientImpl implements HttpClient {
 
     @Override
     public HttpClientResponse post(URL serverUrl, InputStream postContent, String postContentType) throws IOException {
+        if (postContentType.matches(".*/xml.*")) {
+            postContent = LOG_STREAM_XML.log(postContent);
+        }
         URLConnection connection = openConnection(serverUrl);
         if (connection instanceof HttpURLConnection) {
             ((HttpURLConnection) connection).setRequestMethod("POST");
