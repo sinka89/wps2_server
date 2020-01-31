@@ -40,7 +40,7 @@ public class OperationsTest {
         Object obj = unmarshaller.unmarshal(getCapFile);
         Assert.assertTrue(obj instanceof JAXBElement);
         Assert.assertTrue(((JAXBElement) obj).getValue() instanceof GetCapabilitiesType);
-        Marshaller marshaller = JaxbContainer.INSTANCE.jaxbContext.createMarshaller();
+        Marshaller marshaller = JaxbContainer.INSTANCE.getMarshallerWithPrefixMapper();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         marshaller.marshal(obj, out);
         InputStream in = new DataInputStream(new ByteArrayInputStream(out.toByteArray()));

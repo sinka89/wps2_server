@@ -47,7 +47,7 @@ public class WPS2ClientImpl extends AbstractWps2Client {
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             ObjectFactory wps2Factory = new ObjectFactory();
             JAXBElement<GetCapabilitiesType> getCapabilities = wps2Factory.createGetCapabilities(getCapabilitiesType);
-            Marshaller marshaller = JaxbContainer.INSTANCE.jaxbContext.createMarshaller();
+            Marshaller marshaller = JaxbContainer.INSTANCE.getMarshallerWithPrefixMapper();
             marshaller.marshal(getCapabilities, out);
             out.flush();
             if (LOGGER.isDebugEnabled()) {
@@ -88,7 +88,7 @@ public class WPS2ClientImpl extends AbstractWps2Client {
         HttpClientResponse post = null;
         long timeStart = 0;
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            Marshaller marshaller = JaxbContainer.INSTANCE.jaxbContext.createMarshaller();
+            Marshaller marshaller = JaxbContainer.INSTANCE.getMarshallerWithPrefixMapper();
             marshaller.marshal(describeProcess, out);
             out.flush();
             if (LOGGER.isDebugEnabled()) {
@@ -125,7 +125,7 @@ public class WPS2ClientImpl extends AbstractWps2Client {
         long timeStart = 0;
         //noinspection Duplicates
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            Marshaller marshaller = JaxbContainer.INSTANCE.jaxbContext.createMarshaller();
+            Marshaller marshaller = JaxbContainer.INSTANCE.getMarshallerWithPrefixMapper();
             marshaller.marshal(getStatus, out);
             out.flush();
             if (LOGGER.isDebugEnabled()) {
@@ -162,7 +162,7 @@ public class WPS2ClientImpl extends AbstractWps2Client {
         long timeStart = 0;
         //noinspection Duplicates
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            Marshaller marshaller = JaxbContainer.INSTANCE.jaxbContext.createMarshaller();
+            Marshaller marshaller = JaxbContainer.INSTANCE.getMarshallerWithPrefixMapper();
             marshaller.marshal(dismiss, out);
             out.flush();
             if (LOGGER.isDebugEnabled()) {
@@ -201,7 +201,7 @@ public class WPS2ClientImpl extends AbstractWps2Client {
         WPS2ExecuteProcessResponse result = null;
         long timeStart = 0;
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            Marshaller marshaller = JaxbContainer.INSTANCE.jaxbContext.createMarshaller();
+            Marshaller marshaller = JaxbContainer.INSTANCE.getMarshallerWithPrefixMapper();
             marshaller.marshal(execute, out);
             out.flush();
             if (LOGGER.isDebugEnabled()) {
@@ -232,7 +232,7 @@ public class WPS2ClientImpl extends AbstractWps2Client {
         HttpClientResponse post = null;
         long timeStart = 0;
         try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
-            Marshaller marshaller = JaxbContainer.INSTANCE.jaxbContext.createMarshaller();
+            Marshaller marshaller = JaxbContainer.INSTANCE.getMarshallerWithPrefixMapper();
             marshaller.marshal(getResult, out);
             out.flush();
             if (LOGGER.isDebugEnabled()) {

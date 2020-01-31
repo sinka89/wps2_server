@@ -192,7 +192,7 @@ public abstract class ProcessExecutionHelper {
             bboxData.setBoundingBox(boundingBox);
             ro.uti.ksme.wps.wps2.pojo.wps._2.ObjectFactory wpsFactory = new ro.uti.ksme.wps.wps2.pojo.wps._2.ObjectFactory();
             JAXBElement<BoundingBoxData> boundingBoxData = wpsFactory.createBoundingBoxData(bboxData);
-            Marshaller marshaller = JaxbContainer.INSTANCE.jaxbContext.createMarshaller();
+            Marshaller marshaller = JaxbContainer.INSTANCE.getMarshallerWithPrefixMapper();
             marshaller.marshal(boundingBoxData, strW);
             return strW.toString();
         } catch (Exception e) {
@@ -204,7 +204,7 @@ public abstract class ProcessExecutionHelper {
     public static Object marshallRawDataTypeResult(Object result) {
         RawData rawData = (RawData) result;
         try (StringWriter sw = new StringWriter()) {
-            Marshaller marshaller = JaxbContainer.INSTANCE.jaxbContext.createMarshaller();
+            Marshaller marshaller = JaxbContainer.INSTANCE.getMarshallerWithPrefixMapper();
             marshaller.marshal(rawData, sw);
             return sw.toString();
         } catch (Exception e) {

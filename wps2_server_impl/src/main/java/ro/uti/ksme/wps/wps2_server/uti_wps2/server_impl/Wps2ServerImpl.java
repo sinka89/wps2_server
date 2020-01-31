@@ -110,8 +110,8 @@ public class Wps2ServerImpl implements WpsServer {
             StringWriter out = new StringWriter();
             if (result != null) {
                 try {
-                    Marshaller marshaller = JaxbContainer.INSTANCE.jaxbContext.createMarshaller();
-                    marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+                    Marshaller marshaller = JaxbContainer.INSTANCE.getMarshallerWithPrefixMapper();
+//                    marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
                     marshaller.marshal(result, out);
                     out.close();
                 } catch (JAXBException e) {

@@ -30,7 +30,7 @@ public interface ErrorService {
         exceptionReport.getException().add(exceptionType);
         try {
             StringWriter sw = new StringWriter();
-            Marshaller marshaller = JaxbContainer.INSTANCE.jaxbContext.createMarshaller();
+            Marshaller marshaller = JaxbContainer.INSTANCE.getMarshallerWithPrefixMapper();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
             marshaller.marshal(exceptionReport, sw);
             return sw.toString();

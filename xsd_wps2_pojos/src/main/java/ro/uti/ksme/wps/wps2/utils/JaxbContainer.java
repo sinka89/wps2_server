@@ -3,6 +3,8 @@ package ro.uti.ksme.wps.wps2.utils;
 import ro.uti.ksme.wps.wps2.custom_pojo_types.ObjectFactoryCustom;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 
 /**
  * @author Bogdan-Adrian Sincu
@@ -26,5 +28,12 @@ public enum JaxbContainer {
         } catch (Exception e) {
             throw new ExceptionInInitializerError(e);
         }
+    }
+
+    public Marshaller getMarshallerWithPrefixMapper() throws JAXBException {
+        Marshaller marshaller = this.jaxbContext.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new Wps2NamespaceprefixMapper());
+        return marshaller;
     }
 }

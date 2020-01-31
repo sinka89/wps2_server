@@ -22,6 +22,7 @@
         <commons.io.version>2.6</commons.io.version>
         <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
         <maven.jar.plugin.version>3.2.0</maven.jar.plugin.version>
+        <jaxb.version>2.2.11</jaxb.version>
     </properties>
 
     <!--https://github.com/sinka89/wps2_server-->
@@ -78,7 +79,17 @@
             <artifactId>maven-jar-plugin</artifactId>
             <version>${maven.jar.plugin.version}</version>
         </dependency>
-
+        <!-- https://mvnrepository.com/artifact/com.sun.xml.bind/jaxb-impl -->
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>${jaxb.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-core</artifactId>
+            <version>${jaxb.version}</version>
+        </dependency>
     </dependencies>
 
     <inceptionYear>2019</inceptionYear>

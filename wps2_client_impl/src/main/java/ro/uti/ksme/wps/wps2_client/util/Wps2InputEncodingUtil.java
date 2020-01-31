@@ -3,6 +3,7 @@ package ro.uti.ksme.wps.wps2_client.util;
 import ro.uti.ksme.wps.common.utils.processing.Wps2EncoderToString;
 import ro.uti.ksme.wps.wps2.pojo.wps._2.Result;
 import ro.uti.ksme.wps.wps2.utils.JaxbContainer;
+import ro.uti.ksme.wps.wps2.utils.Wps2NamespaceprefixMapper;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
@@ -32,6 +33,8 @@ public class Wps2InputEncodingUtil {
         return (el, context) -> {
             try (StringWriter sw = new StringWriter()) {
                 Marshaller marshaller = context.createMarshaller();
+                marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+                marshaller.setProperty("com.sun.xml.bind.namespacePrefixMapper", new Wps2NamespaceprefixMapper());
                 marshaller.marshal(object, sw);
                 sw.flush();
                 return sw.toString();
