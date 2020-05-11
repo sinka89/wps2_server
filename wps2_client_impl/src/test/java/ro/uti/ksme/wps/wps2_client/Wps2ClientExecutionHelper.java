@@ -38,9 +38,9 @@ public class Wps2ClientExecutionHelper {
                         "            \t\t<ows:UpperCorner>44.2 23.6</ows:UpperCorner>\n" +
                         "        \t\t</ows:BoundingBox>\n" +
                         "\t\t\t</wps:BoundingBoxData>\n");
-        executeProcessRequest.addInput("downloadTiff:bboxInput", Collections.singletonList(data));
+        executeProcessRequest.addInput("downloadTiff_bboxInput", Collections.singletonList(data));
         OutputDefinitionType out = new OutputDefinitionType();
-        out.setId("downloadTiff:rawDataExecuteResponse");
+        out.setId("downloadTiff_rawDataExecuteResponse");
         out.setTransmission(DataTransmissionModeType.VALUE);
         executeProcessRequest.setOutputDefinitionType(out);
         return executeProcessRequest;
@@ -50,9 +50,9 @@ public class Wps2ClientExecutionHelper {
         executeProcessRequest.setIdentifier("literalDataProcess");
         Data data = new Data();
         data.getContent().add("TestData&Increment" + i);
-        executeProcessRequest.addInput("literalDataProcess:inputField", Collections.singletonList(data));
+        executeProcessRequest.addInput("literalDataProcess_inputField", Collections.singletonList(data));
         OutputDefinitionType out = new OutputDefinitionType();
-        out.setId("literalDataProcess:result");
+        out.setId("literalDataProcess_result");
         out.setTransmission(DataTransmissionModeType.VALUE);
         executeProcessRequest.setOutputDefinitionType(out);
         return executeProcessRequest;

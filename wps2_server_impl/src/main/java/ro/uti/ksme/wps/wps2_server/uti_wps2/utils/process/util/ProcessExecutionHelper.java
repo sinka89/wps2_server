@@ -35,6 +35,7 @@ import java.util.Map;
  */
 public abstract class ProcessExecutionHelper {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProcessExecutionHelper.class);
+    private static final String IDENTIFIER_SEPARATOR = "_";
 
     public static <T extends ProcessImplementation> T createProcess(ProcessDescriptionType process, Class<T> clazz, Map<URI, Object> dataMap) {
         T t = null;
@@ -54,21 +55,21 @@ public abstract class ProcessExecutionHelper {
                                 String id = ((LiteralDataInput) a).descriptionType().identifier();
                                 String processId = process.getIdentifier().getValue();
                                 String inputId = i.getIdentifier().getValue();
-                                if (inputId.equals(processId + ":" + id) || inputId.equals(id) || inputId.equals(processId + ":" + f.getName())) {
+                                if (inputId.equals(processId + IDENTIFIER_SEPARATOR + id) || inputId.equals(id) || inputId.equals(processId + IDENTIFIER_SEPARATOR + f.getName())) {
                                     field = f;
                                 }
                             } else if (a instanceof BoundingBoxInput) {
                                 String id = ((BoundingBoxInput) a).descriptionType().identifier();
                                 String processId = process.getIdentifier().getValue();
                                 String inputId = i.getIdentifier().getValue();
-                                if (inputId.equals(processId + ":" + id) || inputId.equals(id) || inputId.equals(processId + ":" + f.getName())) {
+                                if (inputId.equals(processId + IDENTIFIER_SEPARATOR + id) || inputId.equals(id) || inputId.equals(processId + IDENTIFIER_SEPARATOR + f.getName())) {
                                     field = f;
                                 }
                             } else if (a instanceof RawDataInput) {
                                 String id = ((RawDataInput) a).descriptionType().identifier();
                                 String processId = process.getIdentifier().getValue();
                                 String inputId = i.getIdentifier().getValue();
-                                if (inputId.equals(processId + ":" + id) || inputId.equals(id) || inputId.equals(processId + ":" + f.getName())) {
+                                if (inputId.equals(processId + IDENTIFIER_SEPARATOR + id) || inputId.equals(id) || inputId.equals(processId + IDENTIFIER_SEPARATOR + f.getName())) {
                                     field = f;
                                 }
                             }
@@ -104,21 +105,21 @@ public abstract class ProcessExecutionHelper {
                                 String id = ((LiteralDataOutput) a).descriptionType().identifier();
                                 String processId = process.getIdentifier().getValue();
                                 String outputId = o.getIdentifier().getValue();
-                                if (outputId.equals(processId + ":" + id) || outputId.equals(id) || outputId.equals(processId + ":" + m.getName())) {
+                                if (outputId.equals(processId + IDENTIFIER_SEPARATOR + id) || outputId.equals(id) || outputId.equals(processId + IDENTIFIER_SEPARATOR + m.getName())) {
                                     method = m;
                                 }
                             } else if (a instanceof BoundingBoxOutput) {
                                 String id = ((BoundingBoxOutput) a).descriptionType().identifier();
                                 String processId = process.getIdentifier().getValue();
                                 String outputId = o.getIdentifier().getValue();
-                                if (outputId.equals(processId + ":" + id) || outputId.equals(id) || outputId.equals(processId + ":" + m.getName())) {
+                                if (outputId.equals(processId + IDENTIFIER_SEPARATOR + id) || outputId.equals(id) || outputId.equals(processId + IDENTIFIER_SEPARATOR + m.getName())) {
                                     method = m;
                                 }
                             } else if (a instanceof RawDataOutput) {
                                 String id = ((RawDataOutput) a).descriptionType().identifier();
                                 String processId = process.getIdentifier().getValue();
                                 String outputId = o.getIdentifier().getValue();
-                                if (outputId.equals(processId + ":" + id) || outputId.equals(id) || outputId.equals(processId + ":" + m.getName())) {
+                                if (outputId.equals(processId + IDENTIFIER_SEPARATOR + id) || outputId.equals(id) || outputId.equals(processId + IDENTIFIER_SEPARATOR + m.getName())) {
                                     method = m;
                                 }
                             }
@@ -153,21 +154,21 @@ public abstract class ProcessExecutionHelper {
                         String id = ((LiteralDataOutput) a).descriptionType().identifier();
                         String processId = process.getIdentifier().getValue();
                         String outputId = o.getIdentifier().getValue();
-                        if (outputId.equals(processId + ":" + id) || outputId.equals(id) || outputId.equals(processId + ":" + m.getName())) {
+                        if (outputId.equals(processId + IDENTIFIER_SEPARATOR + id) || outputId.equals(id) || outputId.equals(processId + IDENTIFIER_SEPARATOR + m.getName())) {
                             found = true;
                         }
                     } else if (a instanceof BoundingBoxOutput) {
                         String id = ((BoundingBoxOutput) a).descriptionType().identifier();
                         String processId = process.getIdentifier().getValue();
                         String outputId = o.getIdentifier().getValue();
-                        if (outputId.equals(processId + ":" + id) || outputId.equals(id) || outputId.equals(processId + ":" + m.getName())) {
+                        if (outputId.equals(processId + IDENTIFIER_SEPARATOR + id) || outputId.equals(id) || outputId.equals(processId + IDENTIFIER_SEPARATOR + m.getName())) {
                             found = true;
                         }
                     } else if (a instanceof RawDataOutput) {
                         String id = ((RawDataOutput) a).descriptionType().identifier();
                         String processId = process.getIdentifier().getValue();
                         String outputId = o.getIdentifier().getValue();
-                        if (outputId.equals(processId + ":" + id) || outputId.equals(id) || outputId.equals(processId + ":" + m.getName())) {
+                        if (outputId.equals(processId + IDENTIFIER_SEPARATOR + id) || outputId.equals(id) || outputId.equals(processId + IDENTIFIER_SEPARATOR + m.getName())) {
                             found = true;
                         }
                     }

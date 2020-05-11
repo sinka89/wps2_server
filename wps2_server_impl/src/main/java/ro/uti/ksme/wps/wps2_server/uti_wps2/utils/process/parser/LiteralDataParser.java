@@ -39,7 +39,7 @@ public class LiteralDataParser implements Parser {
 
         if (input.getIdentifier() == null) {
             CodeType codeType = new CodeType();
-            codeType.setValue(processAnnotation.descriptionType().identifier() + ":" + f.getName());
+            codeType.setValue(processAnnotation.descriptionType().identifier() + "_" + f.getName());
             input.setIdentifier(codeType);
         }
         return input;
@@ -61,7 +61,7 @@ public class LiteralDataParser implements Parser {
         ObjectAnnotationConverter.annotationToObject(method.getAnnotation(LiteralDataOutput.class).descriptionType(), output, processAnnotation.descriptionType().identifier());
         if (output.getIdentifier() == null) {
             CodeType codeType = new CodeType();
-            codeType.setValue(processAnnotation.descriptionType().identifier() + ":" + method.getName());
+            codeType.setValue(processAnnotation.descriptionType().identifier() + "_" + method.getName());
             output.setIdentifier(codeType);
         }
         return output;

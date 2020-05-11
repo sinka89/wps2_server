@@ -90,7 +90,7 @@ public class ObjectAnnotationConverter {
             if (processIdentifier == null || processIdentifier.isEmpty()) {
                 codeType.setValue(descriptionTypeAttr.identifier().trim());
             } else {
-                codeType.setValue(processIdentifier.trim() + ":" + descriptionTypeAttr.identifier().trim());
+                codeType.setValue(processIdentifier.trim() + "_" + descriptionTypeAttr.identifier().trim());
             }
             descriptionType.setIdentifier(codeType);
         }
