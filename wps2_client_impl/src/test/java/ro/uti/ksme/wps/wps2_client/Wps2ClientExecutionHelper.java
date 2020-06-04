@@ -29,15 +29,20 @@ public class Wps2ClientExecutionHelper {
     public static ExecuteProcessRequest executeDemoProcessDownloadTiff(ExecuteProcessRequest executeProcessRequest) {
         executeProcessRequest.setIdentifier("downloadTiff");
         Data data = new Data();
+        String boundingBox = "<wps:BoundingBoxData xmlns:wps=\"http://www.opengis.net/wps/2.0\" xmlns:ows=\"http://www.opengis.net/ows/2.0\">\n" +
+                "        \t\t<wps:Format mimeType=\"text/plain\"/>\n" +
+                "        \t\t<wps:SupportedCRS default=\"true\">EPSG:4326</wps:SupportedCRS>\n" +
+                "        \t\t<ows:BoundingBox dimensions=\"2\">\n" +
+                "        \t\t\t<ows:LowerCorner>22.4 55.6</ows:LowerCorner>\n" +
+                "            \t\t<ows:UpperCorner>44.2 23.6</ows:UpperCorner>\n" +
+                "        \t\t</ows:BoundingBox>\n" +
+                "\t\t\t</wps:BoundingBoxData>\n";
+        boundingBox = "<ows:BoundingBox xmlns:ows=\"http://www.opengis.net/ows/2.0\" crs=\"urn:ogc:def:crs:EPSG:6.6:4326\" dimensions=\"2\">\n" +
+                "\t                <ows:LowerCorner>25.3296214282642183 45.5285520825164554</ows:LowerCorner>\n" +
+                "\t                <ows:UpperCorner>25.9297832403689128 45.8328479433907177</ows:UpperCorner>\n" +
+                "\t        </ows:BoundingBox>";
         data.getContent().add(
-                "<wps:BoundingBoxData xmlns:wps=\"http://www.opengis.net/wps/2.0\" xmlns:ows=\"http://www.opengis.net/ows/2.0\">\n" +
-                        "        \t\t<wps:Format mimeType=\"text/plain\"/>\n" +
-                        "        \t\t<wps:SupportedCRS default=\"true\">EPSG:4326</wps:SupportedCRS>\n" +
-                        "        \t\t<ows:BoundingBox dimensions=\"2\">\n" +
-                        "        \t\t\t<ows:LowerCorner>22.4 55.6</ows:LowerCorner>\n" +
-                        "            \t\t<ows:UpperCorner>44.2 23.6</ows:UpperCorner>\n" +
-                        "        \t\t</ows:BoundingBox>\n" +
-                        "\t\t\t</wps:BoundingBoxData>\n");
+                boundingBox);
         executeProcessRequest.addInput("downloadTiff_bboxInput", Collections.singletonList(data));
         OutputDefinitionType out = new OutputDefinitionType();
         out.setId("downloadTiff_rawDataExecuteResponse");

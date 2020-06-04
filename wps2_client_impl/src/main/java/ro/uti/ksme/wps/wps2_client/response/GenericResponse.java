@@ -58,4 +58,9 @@ public abstract class GenericResponse implements HttpClientResponse {
     public InputStream getResponseInputStream() {
         return httpClientResponse.getResponseInputStream();
     }
+
+    @Override
+    public long getRequestContentLength() {
+        return httpClientResponse.getRequestContentLength();
+    }
 }

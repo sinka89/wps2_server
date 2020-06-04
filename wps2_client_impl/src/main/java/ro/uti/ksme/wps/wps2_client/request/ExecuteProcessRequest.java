@@ -22,7 +22,12 @@ public interface ExecuteProcessRequest {
 
     <T> void addInput(String name, List<? extends T> value);
 
+    @Deprecated
     void setOutputDefinitionType(OutputDefinitionType output);
+
+    void addOutputDefinitionType(OutputDefinitionType output);
+
+    void setOutputDefinitionType(List<OutputDefinitionType> outputs);
 
     JobControlOps getExecutionType();
 

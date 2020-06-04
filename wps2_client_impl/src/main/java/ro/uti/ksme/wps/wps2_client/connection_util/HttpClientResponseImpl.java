@@ -22,9 +22,12 @@ public class HttpClientResponseImpl implements HttpClientResponse {
 
     private InputStream responseStream;
 
+    private long contentLength = -1;
+
     public HttpClientResponseImpl(final URLConnection conn) throws IOException {
         this.urlConnection = conn;
         if (((HttpURLConnection) conn).getResponseCode() == HttpURLConnection.HTTP_OK) {
+            contentLength = conn.getContentLengthLong();
             responseStream = conn.getInputStream();
         } else {
             responseStream = ((HttpURLConnection) conn).getErrorStream();
@@ -62,5 +65,10 @@ public class HttpClientResponseImpl implements HttpClientResponse {
     @Override
     public InputStream getResponseInputStream() {
         return responseStream;
+    }
+
+    @Override
+    public long getRequestContentLength() {
+        return this.contentLength;
     }
 }

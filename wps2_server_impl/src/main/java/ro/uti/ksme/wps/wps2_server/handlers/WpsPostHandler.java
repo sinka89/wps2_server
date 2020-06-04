@@ -16,6 +16,8 @@ import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.AbstractHttpReque
 import ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util.ProcessResultWrapper;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Optional;
 
 /**
@@ -50,9 +52,11 @@ public class WpsPostHandler implements HttpHandler {
         this.wps2ServerProps = wps2ServerProps;
     }
 
-    public void handle(HttpExchange httpExchange) throws IOException {
-        try (OutputStream os = httpExchange.getResponseBody()) {
-            InputStream is = null;
+    public void handle(HttpExchange httpExchange) {
+        OutputStream os = null;
+        InputStream is = null;
+        try {
+            os = httpExchange.getResponseBody();
             Headers responseHeaders = httpExchange.getResponseHeaders();
             try {
                 this.validateRequestOnServerDeclaration(httpExchange);
@@ -63,27 +67,29 @@ public class WpsPostHandler implements HttpHandler {
                     httpExchange.sendResponseHeaders(200, s.length());
                     is = new ByteArrayInputStream(s.getBytes());
                     byte[] buf = new byte[1024];
-                    int length = is.read(buf);
-                    while (length != -1) {
+                    int length;
+                    while ((length = is.read(buf)) != -1) {
                         os.write(buf, 0, length);
-                        length = is.read(buf);
                     }
-                } else if (output instanceof ProcessResultWrapper && ((ProcessResultWrapper) output).getData() instanceof byte[]) {
-                    is = new ByteArrayInputStream(((byte[]) ((ProcessResultWrapper) output).getData()));
-                    int available = is.available();
-                    if (available != 0) {
-                        byte[] buffer = new byte[1024];
-                        int length = is.read(buffer);
-
-                        if (((ProcessResultWrapper) output).getMimeType() != null) {
-                            responseHeaders.add("Content-Type", ((ProcessResultWrapper) output).getMimeType());
-                        } else {
-                            responseHeaders.add("Content-Type", "application/octet-stream");
-                        }
-                        httpExchange.sendResponseHeaders(200, available);
-                        while (length != -1) {
-                            os.write(buffer, 0, length);
-                            length = is.read(buffer);
+                } else if (output instanceof ProcessResultWrapper) {
+                    if (((ProcessResultWrapper) output).getData() instanceof byte[]) {
+                        is = new ByteArrayInputStream(((byte[]) ((ProcessResultWrapper) output).getData()));
+                    } else if (((ProcessResultWrapper) output).getData() instanceof Path) {
+                        is = new BufferedInputStream(Files.newInputStream((Path) ((ProcessResultWrapper) output).getData()));
+                    }
+                    if (is != null) {
+                        if (is.available() != 0) {
+                            byte[] buffer = new byte[1024 * 4];
+                            int length;
+                            if (((ProcessResultWrapper) output).getMimeType() != null) {
+                                responseHeaders.add("Content-Type", ((ProcessResultWrapper) output).getMimeType());
+                            } else {
+                                responseHeaders.add("Content-Type", "application/octet-stream");
+                            }
+                            httpExchange.sendResponseHeaders(200, ((ProcessResultWrapper) output).getContentSize());
+                            while ((length = is.read(buffer)) != -1) {
+                                os.write(buffer, 0, length);
+                            }
                         }
                     }
                 }
@@ -109,9 +115,21 @@ public class WpsPostHandler implements HttpHandler {
                     httpExchange.sendResponseHeaders(500, s.get().length());
                     os.write(s.get().getBytes());
                 }
-            } finally {
-                if (is != null) {
+            }
+        } catch (IOException e) {
+            LOGGER.error(e.getMessage(), e);
+        } finally {
+            if (os != null) {
+                try {
+                    os.flush();
+                    os.close();
+                } catch (IOException ignored) {
+                }
+            }
+            if (is != null) {
+                try {
                     is.close();
+                } catch (IOException ignored) {
                 }
             }
         }

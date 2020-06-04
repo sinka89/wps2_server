@@ -439,6 +439,7 @@ public class Wps2OperationsImpl implements Wps2Operations {
                         data.getContent().addAll(list);
                         outputType.setData(data);
                     } else if (t.equals(DataTransmissionModeType.REFERENCE)) {
+                        outputType.setId(entry.getKey().toString());
                         //to decide if reference type mimeType get from declaration or let Process override from wrapper
                         ReferenceType refType = new ReferenceType();
                         if (outputDescriptionType.getDataDescription() != null && outputDescriptionType.getDataDescription().getValue() != null

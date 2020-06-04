@@ -4,6 +4,7 @@ import ro.uti.ksme.wps.wps2.pojo.ows._2.CodeType;
 import ro.uti.ksme.wps.wps2.pojo.wps._2.*;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -17,7 +18,7 @@ import java.util.Properties;
  */
 public abstract class AbstractExecuteProcessRequest implements ExecuteProcessRequest {
     private Properties inputs;
-    private OutputDefinitionType outputDefinitionType;
+    private List<OutputDefinitionType> outputDefinitionTypes;
     private URL serverUrl;
 
     public AbstractExecuteProcessRequest(URL serverUrl) {
@@ -42,7 +43,23 @@ public abstract class AbstractExecuteProcessRequest implements ExecuteProcessReq
 
     @Override
     public void setOutputDefinitionType(OutputDefinitionType output) {
-        this.outputDefinitionType = output;
+        if (this.outputDefinitionTypes == null) {
+            this.outputDefinitionTypes = new ArrayList<>();
+        }
+        this.outputDefinitionTypes.add(output);
+    }
+
+    @Override
+    public void addOutputDefinitionType(OutputDefinitionType output) {
+        if (this.outputDefinitionTypes == null) {
+            this.outputDefinitionTypes = new ArrayList<>();
+        }
+        this.outputDefinitionTypes.add(output);
+    }
+
+    @Override
+    public void setOutputDefinitionType(List<OutputDefinitionType> outputs) {
+        this.outputDefinitionTypes = outputs;
     }
 
     @Override
@@ -84,8 +101,8 @@ public abstract class AbstractExecuteProcessRequest implements ExecuteProcessReq
             }
         }
 
-        if (this.outputDefinitionType != null) {
-            executeRequestType.getOutput().add(this.outputDefinitionType);
+        if (this.outputDefinitionTypes != null) {
+            executeRequestType.getOutput().addAll(this.outputDefinitionTypes);
         }
         executeRequestType.setMode(getExecutionType().getMode());
         executeRequestType.setResponse(getResponseType().getType());

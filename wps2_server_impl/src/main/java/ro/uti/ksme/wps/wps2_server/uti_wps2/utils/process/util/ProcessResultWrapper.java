@@ -10,6 +10,7 @@ package ro.uti.ksme.wps.wps2_server.uti_wps2.utils.process.util;
 public final class ProcessResultWrapper<T> {
     private String mimeType;
     private T data;
+    private long contentSize = 0L;
 
     public String getMimeType() {
         return mimeType;
@@ -25,5 +26,13 @@ public final class ProcessResultWrapper<T> {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    public long getContentSize() {
+        return contentSize;
+    }
+
+    public void setContentSize(long contentSize) {
+        this.contentSize = contentSize;
     }
 }

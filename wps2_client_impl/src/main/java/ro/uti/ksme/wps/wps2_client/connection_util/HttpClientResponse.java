@@ -17,5 +17,7 @@ public interface HttpClientResponse {
 
     String getResponseHeader(String headerName);
 
+    long getRequestContentLength();
+
     InputStream getResponseInputStream();
 }

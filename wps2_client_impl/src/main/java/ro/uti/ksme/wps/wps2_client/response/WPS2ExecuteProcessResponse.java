@@ -56,8 +56,10 @@ public class WPS2ExecuteProcessResponse extends GenericResponse implements Prope
                 } else if (obj instanceof ExceptionReport) {
                     exceptionReport = (ExceptionReport) obj;
                 }
+                inputStream = new ProgressInputStream(new BufferedInputStream(new ByteArrayInputStream(bytes)), bytes.length);
+                inputStream.addPropertyChangeListener(this);
             } else {
-                inputStream = new ProgressInputStream(httpClientResponse.getResponseInputStream(), httpClientResponse.getResponseInputStream().available());
+                inputStream = new ProgressInputStream(httpClientResponse.getResponseInputStream(), httpClientResponse.getRequestContentLength());
                 inputStream.addPropertyChangeListener(this);
             }
             rawResponseStream = inputStream;
@@ -95,7 +97,9 @@ public class WPS2ExecuteProcessResponse extends GenericResponse implements Prope
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals(ProgressInputStream.PROP_ALL_BYTES_READ)) {
+        if (evt.getPropertyName().equals(ProgressInputStream.PROP_ALL_BYTES_READ) || evt.getPropertyName().equals(ProgressInputStream.PROP_STREAM_CLOSED)) {
+            final ProgressInputStream source = (ProgressInputStream) evt.getSource();
+            source.removePropertyChangeListener(this);
             super.dismiss();
         }
     }
