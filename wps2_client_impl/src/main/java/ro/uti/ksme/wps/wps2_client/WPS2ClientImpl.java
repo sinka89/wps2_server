@@ -169,7 +169,7 @@ public class WPS2ClientImpl extends AbstractWps2Client {
                 timeStart = System.currentTimeMillis();
             }
             post = httpClient.post(serverUrl, out.toInputStream(), "text/xml");
-            if (post.getContentType().equals("application/xml")) {
+            if (post.getContentType().matches(".*/xml.*")) {
                 result = new WPS2StatusInfoResponse(post);
             }
         } catch (JAXBException | IOException e) {
