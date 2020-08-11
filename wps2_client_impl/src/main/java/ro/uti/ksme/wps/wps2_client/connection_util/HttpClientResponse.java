@@ -20,4 +20,6 @@ public interface HttpClientResponse {
     long getRequestContentLength();
 
     InputStream getResponseInputStream();
+
+    int getHttpResponseCode();
 }

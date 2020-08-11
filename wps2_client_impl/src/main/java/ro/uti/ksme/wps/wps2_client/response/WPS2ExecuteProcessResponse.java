@@ -27,7 +27,6 @@ import java.io.InputStream;
  */
 public class WPS2ExecuteProcessResponse extends GenericResponse implements PropertyChangeListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(WPS2ExecuteProcessResponse.class);
-    private ExceptionReport exceptionReport;
     private ProgressInputStream rawResponseStream;
     private String rawContentType;
     private Result executionResult;
@@ -69,10 +68,6 @@ public class WPS2ExecuteProcessResponse extends GenericResponse implements Prope
                 inputStream.close();
             }
         }
-    }
-
-    public ExceptionReport getExceptionReport() {
-        return exceptionReport;
     }
 
     public InputStream getRawResponseStream() {

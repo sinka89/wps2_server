@@ -19,7 +19,6 @@ import java.io.IOException;
  */
 public class WPS2DescribeProcessResponse extends GenericResponse {
     private ProcessOfferings processOfferings;
-    private ExceptionReport exceptionReport;
 
     public WPS2DescribeProcessResponse(HttpClientResponse response) throws IOException, JAXBException {
         super(response);
@@ -34,9 +33,5 @@ public class WPS2DescribeProcessResponse extends GenericResponse {
 
     public ProcessOfferings getProcessOfferings() {
         return processOfferings;
-    }
-
-    public ExceptionReport getExceptionReport() {
-        return exceptionReport;
     }
 }

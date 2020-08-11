@@ -19,7 +19,6 @@ import java.io.IOException;
  */
 public class WPS2StatusInfoResponse extends GenericResponse {
     private StatusInfo statusInfo;
-    private ExceptionReport exceptionReport;
 
     public WPS2StatusInfoResponse(HttpClientResponse response) throws IOException, JAXBException {
         super(response);
@@ -34,9 +33,5 @@ public class WPS2StatusInfoResponse extends GenericResponse {
 
     public StatusInfo getStatusInfo() {
         return statusInfo;
-    }
-
-    public ExceptionReport getExceptionReport() {
-        return exceptionReport;
     }
 }

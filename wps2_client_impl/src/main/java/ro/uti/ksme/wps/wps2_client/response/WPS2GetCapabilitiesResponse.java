@@ -20,7 +20,6 @@ import java.io.IOException;
  */
 public class WPS2GetCapabilitiesResponse extends GenericResponse {
     private WPSCapabilitiesType wpsCapabilitiesTypeResponse;
-    private ExceptionReport exceptionResponse;
 
     public WPS2GetCapabilitiesResponse(HttpClientResponse response) throws IOException, JAXBException {
         super(response);
@@ -33,7 +32,7 @@ public class WPS2GetCapabilitiesResponse extends GenericResponse {
             }
         } else {
             if (obj instanceof ExceptionReport) {
-                exceptionResponse = (ExceptionReport) obj;
+                exceptionReport = (ExceptionReport) obj;
             }
         }
     }
@@ -43,6 +42,6 @@ public class WPS2GetCapabilitiesResponse extends GenericResponse {
     }
 
     public ExceptionReport getExceptionResponse() {
-        return exceptionResponse;
+        return exceptionReport;
     }
 }
