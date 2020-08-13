@@ -69,11 +69,27 @@ public class HttpClientImpl implements HttpClient {
 
     @Override
     public HttpClientResponse post(URL serverUrl, InputStream postContent, String postContentType) throws IOException {
-        if (postContentType.matches(".*/xml.*")) {
+        if (postContentType != null && postContentType.matches(".*/xml.*")) {
             postContent = LOG_STREAM_XML.log(postContent);
         }
         URLConnection connection = openConnection(serverUrl);
         if (connection instanceof HttpURLConnection) {
+            final int status = ((HttpURLConnection) connection).getResponseCode();
+            boolean redirected = false;
+            if (status != HttpURLConnection.HTTP_OK) {
+                if (status == 401) {
+                    throw new Wps2ServerException("Response code 401, Unauthorized");
+                } else if (status > 300 && status < 400) {
+                    redirected = true;
+                }
+            }
+            if (redirected) {
+                String newUrl = connection.getHeaderField("Location");
+                if (!hasText(newUrl)) {
+                    throw new Wps2ServerException(String.format("Http status received: %1$s for url: %2$s, tried and failed to redirect!", status, newUrl));
+                }
+                connection = openConnection(new URL(newUrl));
+            }
             ((HttpURLConnection) connection).setRequestMethod("POST");
         }
         connection.setDoOutput(true);
@@ -93,9 +109,6 @@ public class HttpClientImpl implements HttpClient {
             os.flush();
             os.close();
         }
-        if (((HttpURLConnection) connection).getResponseCode() == 401) {
-            throw new Wps2ServerException("Response code 401, Unauthorized");
-        }
         return new HttpClientResponseImpl(connection);
     }
 
@@ -111,5 +124,17 @@ public class HttpClientImpl implements HttpClient {
             connection.setRequestProperty("Authorization", "Basic " + encodedAuth);
         }
         return connection;
+    }
+
+    private static boolean hasText(String str) {
+        if (str != null && str.length() > 0) {
+            int length = str.length();
+            for (int i = 0; i < length; ++i) {
+                if (!Character.isWhitespace(str.charAt(i))) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
