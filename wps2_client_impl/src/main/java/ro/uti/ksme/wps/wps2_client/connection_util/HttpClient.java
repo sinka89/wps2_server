@@ -1,7 +1,8 @@
 package ro.uti.ksme.wps.wps2_client.connection_util;
 
+import org.apache.commons.io.output.ByteArrayOutputStream;
+
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 
 /**
@@ -25,5 +26,5 @@ public interface HttpClient {
 
     void setConnectionTimeout(int timeout);
 
-    HttpClientResponse post(URL serverUrl, InputStream postContent, String postContentType) throws IOException;
+    HttpClientResponse post(URL serverUrl, ByteArrayOutputStream postContent, String postContentType) throws IOException;
 }

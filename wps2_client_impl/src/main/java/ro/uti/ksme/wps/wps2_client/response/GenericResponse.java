@@ -1,13 +1,11 @@
 package ro.uti.ksme.wps.wps2_client.response;
 
-import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ro.uti.ksme.wps.wps2.pojo.ows._2.ExceptionReport;
 import ro.uti.ksme.wps.wps2_client.connection_util.HttpClientResponse;
-import ro.uti.ksme.wps.wps2_client.connection_util.LogStreamContentFunctional;
+import ro.uti.ksme.wps.wps2_client.connection_util.LogContentFunctional;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -22,12 +20,10 @@ public abstract class GenericResponse implements HttpClientResponse {
     private static final Logger LOGGER = LoggerFactory.getLogger(GenericResponse.class);
     protected HttpClientResponse httpClientResponse;
     protected ExceptionReport exceptionReport;
-    protected static final LogStreamContentFunctional LOG_STREAM_XML = postContent -> {
-        byte[] bytes = IOUtils.toByteArray(postContent);
+    protected static final LogContentFunctional LOG_DATA = data -> {
         if (LOGGER.isDebugEnabled()) {
-            LOGGER.debug("INFO_WPS2_CLIENT >>>> The following data was received from the Wps2 Server implementation \n" + new String(bytes) + "\n");
+            LOGGER.debug("INFO_WPS2_CLIENT >>>> The following data was received from the Wps2 Server implementation \n" + new String(data) + "\n");
         }
-        return new ByteArrayInputStream(bytes);
     };
 
     public GenericResponse(HttpClientResponse response) throws IOException {

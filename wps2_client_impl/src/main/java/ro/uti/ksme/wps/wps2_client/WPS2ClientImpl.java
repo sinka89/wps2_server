@@ -53,7 +53,7 @@ public class WPS2ClientImpl extends AbstractWps2Client {
             if (LOGGER.isDebugEnabled()) {
                 timeStart = System.currentTimeMillis();
             }
-            post = httpClient.post(serverUrl, out.toInputStream(), "text/xml");
+            post = httpClient.post(serverUrl, out, "text/xml");
             if (post.getContentType().matches(".*/xml.*")) {
                 result = new WPS2GetCapabilitiesResponse(post);
             }
@@ -94,7 +94,7 @@ public class WPS2ClientImpl extends AbstractWps2Client {
             if (LOGGER.isDebugEnabled()) {
                 timeStart = System.currentTimeMillis();
             }
-            post = httpClient.post(serverUrl, out.toInputStream(), "text/xml");
+            post = httpClient.post(serverUrl, out, "text/xml");
             if (post.getContentType().matches(".*/xml.*")) {
                 result = new WPS2DescribeProcessResponse(post);
             }
@@ -131,7 +131,7 @@ public class WPS2ClientImpl extends AbstractWps2Client {
             if (LOGGER.isDebugEnabled()) {
                 timeStart = System.currentTimeMillis();
             }
-            post = httpClient.post(serverUrl, out.toInputStream(), "text/xml");
+            post = httpClient.post(serverUrl, out, "text/xml");
             if (post.getContentType().matches(".*/xml.*")) {
                 result = new WPS2StatusInfoResponse(post);
             }
@@ -168,7 +168,7 @@ public class WPS2ClientImpl extends AbstractWps2Client {
             if (LOGGER.isDebugEnabled()) {
                 timeStart = System.currentTimeMillis();
             }
-            post = httpClient.post(serverUrl, out.toInputStream(), "text/xml");
+            post = httpClient.post(serverUrl, out, "text/xml");
             if (post.getContentType().matches(".*/xml.*")) {
                 result = new WPS2StatusInfoResponse(post);
             }
@@ -207,7 +207,7 @@ public class WPS2ClientImpl extends AbstractWps2Client {
             if (LOGGER.isDebugEnabled()) {
                 timeStart = System.currentTimeMillis();
             }
-            post = httpClient.post(serverUrl, out.toInputStream(), "text/xml");
+            post = httpClient.post(serverUrl, out, "text/xml");
             result = new WPS2ExecuteProcessResponse(post);
         } catch (JAXBException | IOException e) {
             LOGGER.error(e.getMessage(), e);
@@ -238,7 +238,7 @@ public class WPS2ClientImpl extends AbstractWps2Client {
             if (LOGGER.isDebugEnabled()) {
                 timeStart = System.currentTimeMillis();
             }
-            post = httpClient.post(serverUrl, out.toInputStream(), "text/xml");
+            post = httpClient.post(serverUrl, out, "text/xml");
             result = new WPS2ExecuteProcessResponse(post);
         } catch (JAXBException | IOException e) {
             LOGGER.error(e.getMessage(), e);

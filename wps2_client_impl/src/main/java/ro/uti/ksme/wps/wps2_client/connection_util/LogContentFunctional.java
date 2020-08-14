@@ -1,7 +1,6 @@
 package ro.uti.ksme.wps.wps2_client.connection_util;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * Created by IntelliJ IDEA.
@@ -11,6 +10,6 @@ import java.io.InputStream;
  * Time: 10:51 AM
  */
 @FunctionalInterface
-public interface LogStreamContentFunctional {
-    InputStream log(InputStream postContent) throws IOException;
+public interface LogContentFunctional {
+    void log(byte[] postContent) throws IOException;
 }
