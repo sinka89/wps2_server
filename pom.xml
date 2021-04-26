@@ -19,7 +19,7 @@
         <spring.version>5.2.1.RELEASE</spring.version>
         <global.version>1.0.0</global.version>
         <reflections.version>0.9.10</reflections.version>
-        <commons.io.version>2.6</commons.io.version>
+        <commons.io.version>2.7</commons.io.version>
         <maven.compiler.plugin.version>3.8.1</maven.compiler.plugin.version>
         <maven.jar.plugin.version>3.2.0</maven.jar.plugin.version>
         <jaxb.version>2.2.11</jaxb.version>
